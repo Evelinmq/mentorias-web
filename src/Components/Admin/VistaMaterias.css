@@ -1,0 +1,55 @@
+.materias-container {
+  padding: 20px;
+}
+
+.materias-header {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.btn-agregar {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tabla-general th {
+  text-align: left;
+  color: #8c8c8c;
+  padding: 15px;
+  font-size: 14px;
+}
+
+.tabla-general td {
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #4a5568;
+}
+
+.acciones-celda {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+.btn-accion {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background-color: #000;
+  border: none;
+}
