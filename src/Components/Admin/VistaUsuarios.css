@@ -1,0 +1,131 @@
+.usuarios-container {
+  padding: 20px;
+}
+
+.usuarios-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Botón Agregar */
+.btn-agregar {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Botón Pendientes */
+.btn-pendientes {
+  background-color: #d1d5db;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000;
+  padding: 10px 25px;
+  border-radius: 12px;
+}
+
+.btn-pendientes.activo {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Filtro Dropdown */
+.select-filtro-usuario {
+  padding: 10px 15px;
+  border-radius: 12px;
+  background-color: #f1f1f1;
+  border: 1px solid #d1d5db;
+  color: #4a5568;
+  width: 250px;
+}
+
+/* Estilos de la Tabla */
+.tabla-general {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-general th {
+  text-align: left;
+  color: #8c8c8c;
+  padding: 15px;
+  font-weight: 500;
+}
+
+.tabla-general td {
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Celda de Acciones */
+.acciones-celda {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-accion {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-accion img {
+  width: 18px;
+  height: 18px;
+}
+
+/* Botón Eliminar y Bloquear*/
+.btn-block {
+  background-color: #8c8c8c;
+  border: none;
+}
+
+.btn-delete {
+  background-color: #000;
+  border: none;
+}
+
+.btn-accion:hover {
+  opacity: 0.8;
+}
+
+/* -.-- ESTILOS EXCLUSIVOS PARA LA TABLA DE PENDIENTES --- */
+.btn-check {
+  background-color: #000;
+  border: none;
+}
+
+
+.btn-cross {
+  background-color: #fff;
+  border: 1px solid #d1d5db
+}
+
+.btn-accion img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
