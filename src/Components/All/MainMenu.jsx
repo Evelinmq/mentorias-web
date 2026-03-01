@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import './MainMenu.css';
 import VistaReportes from '../Admin/VistaReportes';
-
-const VistaUsuarios = () => <div className="p-4">Región de Gestión de Usuarios</div>;
-const VistaMaterias = () => <div className="p-4">Región de Materias</div>;
-const VistaCarreras = () => <div className="p-4">Región de Carreras</div>;
+import VistaUsuarios from '../Admin/VistaUsuarios';
+import VistaMaterias from '../Admin/VistaMaterias';
+import VistaCarreras from '../Admin/VistaCarreras';
 
 
 function MainMenu() {

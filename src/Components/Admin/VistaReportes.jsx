@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './VistaReportes.css';
 import DownloadIcon from '../../assets/DownloadIcon.png'
 
+
 const datosReporte = [
   {
     fecha: '30/01/2026',
