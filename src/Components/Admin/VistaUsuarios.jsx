@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './VistaUsuarios.css';
+import './ModalesGlobal.css';
 
 import iconEdit from '../../assets/EditIcon.png';
 import iconBlock from '../../assets/DesactivateIcon.png';
@@ -10,6 +11,21 @@ import iconCross from '../../assets/CrossIcon.png';
 const VistaUsuarios = () => {
   // Estado para mostrar la tabla correspondiente
   const [verPendientes, setVerPendientes] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleAgregar = ()=> {
+    setIsEditing(false);
+    setShowModal(true);
+  }
+
+  const handleEditar = () => {
+    setIsEditing(true);
+    setShowModal(true);
+
+    console.log("Editando a usuario....");
+  }
   
   // Datos de ejemplo -.-.-.-.-.-.-.-..-..-. Borrar despues
   const usuariosPrincipales = [
@@ -28,7 +44,7 @@ const VistaUsuarios = () => {
       {/* HEADER DE ACCIONES */}
       <header className="usuarios-header">
         <div className="header-left">
-          <button className="btn-agregar" onClick={() => console.log("Abrir modal...")}>
+          <button className="btn-agregar" onClick={handleAgregar}>
             + Agregar
           </button>
           <button 
@@ -85,7 +101,9 @@ const VistaUsuarios = () => {
                     </>
                     ) : (
                     <>
-                        <button className="btn-accion"><img src={iconEdit} alt="Editar" /></button>
+                        <button className="btn-accion" onClick={()=> handleEditar(user)}>
+                          <img src={iconEdit} alt="Editar" />
+                        </button>
                         <button className="btn-accion btn-block"><img src={iconBlock} alt="Bloquear" /></button>
                         <button className="btn-accion btn-delete"><img src={iconDelete} alt="Eliminar" /></button>
                     </>
@@ -95,8 +113,61 @@ const VistaUsuarios = () => {
             ))}
             </tbody>
         </table>
+      </div>
+
+        {showModal && (
+        <div className='modal-overlay'>
+          <div className='modal-content'>
+            <h2 className='modal-title'>
+              {isEditing ? "Editar usuario" : "Agregar usuario"}
+            </h2>
+
+            <form className='modal-form'>
+              <div className='modal-grid'>
+                {/*Lado izquierdo */}
+                <div className='modal-column'>
+                  <input type="text" placeholder='Correo' className='modal-input' />
+                  <input type="text" placeholder='Nombre completo' className='modal-input' />
+                  <input type="password" placeholder='Contraseña' className='modal-input' />
+                </div>
+
+                {/*Lado derecho */}
+                <div className='modal-column'>
+
+                  <select className='modal-select'>
+                    <option value="" disabled selected>Semestre</option>
+                  </select>
+
+                  <select className='modal-select'>
+                    <option value="" disables selected>Carrera</option>
+                  </select>
+
+                  <select className='modal-select'>
+                    <option value="" disables selected>Rol</option>
+                  </select>
+
+                </div>
+              </div>
+
+              <div className='modal-actions'>
+                <button type='button'
+                  className='btn-cancelar'
+                  onClick={()=> setShowModal(false)}>
+                  Cancelar
+                </button>
+
+                <button type="submit" className='btn-guardar'>
+                  {isEditing ? "Actualizar" : "Guardar"}
+                </button>
+              </div>
+
+            </form>
+          </div>
         </div>
+      )}
     </div>
+
+      
   );
 };
 

@@ -46,6 +46,17 @@
   gap: 20px;
 }
 
+.modal-center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
 /* INPUTS Y SELECTS */
 .modal-input, .modal-select {
   padding: 15px 20px;
