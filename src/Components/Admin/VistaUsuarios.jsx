@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import './VistaUsuarios.css';
 import './ModalesGlobal.css';
+import { alertaExito, alertaError, confirmarEliminar, confirmarDesactivarUsuario, alertaCamposVacios } from "../../utils/alerts";
 
 import iconEdit from '../../assets/EditIcon.png';
 import iconBlock from '../../assets/DesactivateIcon.png';
 import iconDelete from '../../assets/TrashIcon.png';
 import iconCheck from '../../assets/TickIcon.png';
 import iconCross from '../../assets/CrossIcon.png';
+import { configs } from 'eslint-plugin-react-hooks';
 
 const VistaUsuarios = () => {
   // Estado para mostrar la tabla correspondiente
@@ -27,6 +29,38 @@ const VistaUsuarios = () => {
     console.log("Editando a usuario....");
   }
   
+
+  const eliminarUsuario = async () => {
+
+    const confirmar = await confirmarEliminar();
+
+    if (confirmar) {
+      //Hacer lógica para eliminar*******
+      console.log("Usuario eliminado");
+      alertaExito("Usuario eliminado correctamente");
+    }
+  };
+
+  const rechazarSolicitud = async () => {
+
+    const confirmar = await confirmarDesactivarUsuario();
+
+    if(confirmar) {
+      //Hacer lógica para rechazar********
+      alertaExito("Se ha rechazado la solicitud del usuario")
+    }
+  }
+
+  const desactivarUsuario = async () => {
+    const confirmar = await confirmarDesactivarUsuario();
+
+    if(confirmar){
+      //Hacer lógica para desactivar***************
+      alertaExito("Se ha descativado el usuario")
+    }
+  }
+  
+
   // Datos de ejemplo -.-.-.-.-.-.-.-..-..-. Borrar despues
   const usuariosPrincipales = [
     { correo: '20243ds148@utez.edu.mx', nombre: 'Andres Manuel Lopez Obrador', carrera: 'Desarrollo de Software', rol: 'Mentor' },
@@ -95,7 +129,7 @@ const VistaUsuarios = () => {
                         <button className="btn-accion btn-check">
                         <img src={iconCheck} alt="Aceptar" />
                         </button>
-                        <button className="btn-accion btn-cross">
+                        <button className="btn-accion btn-cross" onClick={rechazarSolicitud}>
                         <img src={iconCross} alt="Rechazar" />
                         </button>
                     </>
@@ -104,8 +138,8 @@ const VistaUsuarios = () => {
                         <button className="btn-accion" onClick={()=> handleEditar(user)}>
                           <img src={iconEdit} alt="Editar" />
                         </button>
-                        <button className="btn-accion btn-block"><img src={iconBlock} alt="Bloquear" /></button>
-                        <button className="btn-accion btn-delete"><img src={iconDelete} alt="Eliminar" /></button>
+                        <button className="btn-accion btn-block" onClick={desactivarUsuario}><img src={iconBlock} alt="Bloquear" /></button>
+                        <button className="btn-accion btn-delete" onClick={eliminarUsuario}><img src={iconDelete} alt="Eliminar" /></button>
                     </>
                     )}
                 </td>

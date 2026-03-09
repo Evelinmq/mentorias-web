@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './VistaCarreras.css';
 import iconEdit from '../../assets/EditIcon.png';
+import { alertaExito, alertaError, alertaCamposVacios } from "../../utils/alerts";
 
 const VistaCarreras = () => {
 

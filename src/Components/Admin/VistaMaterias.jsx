@@ -3,6 +3,7 @@ import './VistaMaterias.css';
 // Importamos los iconos que ya tienes
 import iconEdit from '../../assets/EditIcon.png';
 import iconDelete from '../../assets/TrashIcon.png';
+import { alertaExito, alertaError, confirmarEliminar, alertaCamposVacios } from "../../utils/alerts";
 
 const VistaMaterias = () => {
 
@@ -19,6 +20,17 @@ const VistaMaterias = () => {
     setShowModal(true);
 
     console.log("Editando materia...");
+  };
+
+  const eliminarMateria = async () => {
+  
+      const confirmar = await confirmarEliminar();
+  
+      if (confirmar) {
+        //Hacer lógica para eliminar*******
+        console.log("Materia eliminada");
+        alertaExito("Materia eliminada correctamente");
+      }
   };
 
   // Datos de ejemplo .-.-.-.-.-.-.-.- Borrar despúes
@@ -60,7 +72,7 @@ const VistaMaterias = () => {
                     onClick={()=> handleEditar(materia)}>
                     <img src={iconEdit} alt="Editar" />
                   </button>
-                  <button className="btn-accion btn-delete">
+                  <button className="btn-accion btn-delete" onClick={eliminarMateria}>
                     <img src={iconDelete} alt="Eliminar" />
                   </button>
                 </td>
@@ -82,7 +94,7 @@ const VistaMaterias = () => {
                 {/*Lado izquierdo */}
                 <div className='modal-column'>
                   <input type="text" placeholder='Materia' className='modal-input' />
-                  <input type="text" placeholder='Cuatrimestre' className='modal-input' />
+                  <input type="number" placeholder='Cuatrimestre' className='modal-input' />
                 </div>
 
                 {/*Lado derecho */}
