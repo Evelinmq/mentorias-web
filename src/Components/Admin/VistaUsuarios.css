@@ -16,7 +16,7 @@
 
 /* Botón Agregar */
 .btn-agregar {
-  background-color: #000;
+  background-color: #132D63;
   color: #fff;
   border: none;
   padding: 10px 25px;
@@ -31,13 +31,13 @@
   border: none;
   font-weight: bold;
   cursor: pointer;
-  color: #000;
+  color: #132D63;
   padding: 10px 25px;
   border-radius: 12px;
 }
 
 .btn-pendientes.activo {
-  background-color: #000;
+  background-color: #132D63;
   color: #fff;
   border: none;
   padding: 10px 25px;

@@ -31,14 +31,14 @@
 }
 
 .btn-active-black {
-  background-color: #000;
+  background-color: #132D63;
   color: #fff;
   border: none;
 }
 
 .btn-inactive-white {
   background-color: #fff;
-  color: #000;
+  color: #132D63;
   border: 1px solid #d1d5db;
 }
 
@@ -105,7 +105,7 @@
   border: 1px solid #d1d5db;
   background-color: #f1f1f1;
   font-size: 14px;
-  width: 170px;
+  width: 100px;
 }
 
 .fecha-wrapper {
@@ -155,11 +155,6 @@
   outline: none;
 }
 
-.input-fecha:focus {
-  border-color: #000;
-  background-color: #fff;
-}
-
 .icono-flecha {
   position: absolute;
   right: 10px;
@@ -191,7 +186,7 @@
 /* filas del cuerpo */
 .tabla-reportes tbody td {
   padding: 15px;
-  color: #000;
+  color: #132D63;
   font-weight: 400;
 }
 
