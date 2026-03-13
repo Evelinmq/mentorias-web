@@ -70,4 +70,6 @@ export const toast = Swal.mixin({
 });
 
 //Esto es lo qi deben importar en sus archivos para hacer uso de las alertas:
-// import { alertaExito, alertaError, confirmarEliminar } from "../../utils/alerts";
+// import { ... } from "../../utils/alerts";
+
+//Los estilos css para las alertas se encuentran dentro de App.css
