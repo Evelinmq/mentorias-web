@@ -4,6 +4,7 @@ import VistaReportes from '../Admin/VistaReportes';
 import VistaUsuarios from '../Admin/VistaUsuarios';
 import VistaMaterias from '../Admin/VistaMaterias';
 import VistaCarreras from '../Admin/VistaCarreras';
+import Header from "../All/Header";
 
 
 function MainMenu() {

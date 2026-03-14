@@ -64,7 +64,7 @@ const VistaReportes = () => {
               <span className="icono-buscar">&#128269;</span>
               <input 
                 type="text" 
-                placeholder="Buscar por mentor" 
+                placeholder="Buscar mentor" 
                 className="input-buscar" 
                 value={filtroMentor}
                 onChange={(e) => setFiltroMentor(e.target.value)}
@@ -78,7 +78,7 @@ const VistaReportes = () => {
               <span className="icono-buscar">&#128269;</span>
               <input 
                 type="text" 
-                placeholder="Buscar por materia" 
+                placeholder="Buscar materia" 
                 className="input-buscar" 
                 value={filtroMateria}
                 onChange={(e) => setFiltroMateria(e.target.value)}

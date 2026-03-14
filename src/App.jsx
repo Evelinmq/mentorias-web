@@ -3,8 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Components/Auth/Login";
 import MainMenu from "./Components/All/MainMenu";
 
-import ProtectedRoutes from "../routes/ProtectedRoutes";
-import PublicRoute from "../routes/PublicRoute";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import PublicRoute from "./routes/PublicRoute";
 
 function App() {
 
