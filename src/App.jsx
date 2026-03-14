@@ -5,15 +5,10 @@ import Login from './Components/Auth/Login';
 
 function App() {
 
-  const [isLoggeado, setLoggeado] = useState(false);
-
-
   return (
     <>
-    {isLoggeado ? 
-    (<MainMenu />) :(
-      <Login onLoginSuccess={() => setLoggeado(true)} />
-    ) }
+    
+    <MainMenu />
     </>
   );
 }
