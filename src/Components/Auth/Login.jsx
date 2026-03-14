@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {alertaCamposVacios} from "../../utils/alerts"
+import logo from "../../assets/logo.png";
+import "./Login.css";
 
 function Login(){
 const [correo, setCorreo] = useState("");
@@ -18,6 +20,15 @@ alert("Login similado correctamente (esto es momentaneo)");
 
 return(
     <div className="login-contenedor">
+    <div className="Circulo1"/>
+    <div className="circulo2"/>
+    <div className="circulo3"/>
+    <div className="circulo4"/>
+    <div className="circulo5"/>
+    <div className="circulo6"/>
+    <div className="circulo7"/>
+    <div className="circulo8"/>
+
          <div className="login-box">
 
         <img src={logo} className="login-logo" />

@@ -1,18 +1,130 @@
 .login-contenedor{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:#f5f6f8;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 999;
 }
+
+
+.Circulo1 {
+  content: "";
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background-color: #1a3c8e; 
+  border-radius: 50%;
+  top: -80px; 
+  left: -80px; 
+  z-index: 1;  
+}
+
+
+.circulo2 {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: #2e6df56c;
+  border-radius: 50%;
+  top: 60px;  
+  left: 100px;
+  z-index: 2;  
+}
+
+.circulo3 {
+    content: "";
+    position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: #2e6df56c;
+  border-radius: 50%;
+  top: 210px;  
+  left: 100px;
+  
+  z-index: 2;
+}
+
+.circulo4 {
+    content: "";
+    position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #2e6df56c; 
+  top: 150px;
+  left: 230px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.circulo5 {
+    content: "";
+    position: absolute;
+  width: 450px; 
+  height: 450px;
+  background-color: #18397F; 
+  top: 450px;      
+  transform: translateY(-70%);
+  right: -300px;  
+  border-radius: 50%;   
+  z-index: 1;      
+}
+
+.circulo6 {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: #2e6df56c;
+  border-radius: 50%;
+  top: 300px;  
+ right: 100px;
+  z-index: 2;  
+}
+
+.circulo7 {
+    content: "";
+    position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: #2e6df56c;
+  border-radius: 50%;
+  top: 450px;  
+  right: 180px;
+  
+  z-index: 2;
+}
+
+.circulo8 {
+    content: "";
+    position: absolute;
+  width: 450px; 
+  height: 450px;
+  background-color: #18397F; 
+  top: 1000px;      
+  transform: translateY(-70%);
+  right: 1120px;  
+  border-radius: 50%;   
+  z-index: 1;      
+}
+
+
+
 
 .login-box{
 width:420px;
 text-align:center;
+
 }
 
 .login-logo{
-width:120px;
+width:200px;
 margin-bottom:10px;
 }
 
