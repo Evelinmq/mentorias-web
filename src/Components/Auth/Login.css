@@ -129,17 +129,20 @@ margin-bottom:10px;
 }
 
 .login-title{
-color:#102757;
-margin-bottom:30px;
+color:#18397F;
+margin-bottom:10px;
+font-family: poppins, sans-serif;
 }
 
 form{
+font-family: poppins, sans-serif;
 display:flex;
 flex-direction:column;
 gap:10px;
 }
 
 label{
+font-family: poppins, sans-serif;
 text-align:left;
 font-size:14px;
 color:#1f3c88;
@@ -152,6 +155,7 @@ border:1px solid #cfd4dc;
 }
 
 .forgot{
+font-family: poppins, sans-serif;
 font-size:12px;
 color:#204BA8;
 text-align:left;
@@ -159,6 +163,7 @@ cursor:pointer;
 }
 
 .login-btn{
+font-family: poppins, sans-serif;
 margin-top:10px;
 padding:12px;
 background:#18397F;
@@ -170,11 +175,13 @@ cursor:pointer;
 }
 
 .register{
+    font-family: poppins, sans-serif;
 margin-top:20px;
 font-size:14px;
 }
 
 .register span{
+    font-family: poppins, sans-serif;
 color:#204BA8;
 font-weight:bold;
 cursor:pointer;
