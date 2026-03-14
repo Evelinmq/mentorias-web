@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../AuthContext";
 import {alertaCamposVacios} from "../../utils/alerts"
 import logo from "../../assets/logo.png";
 import "./Login.css";
@@ -6,6 +9,9 @@ import "./Login.css";
 function Login(){
 const [correo, setCorreo] = useState("");
 const [password, setPassword]= useState("");
+const { login } = useContext(AuthContext);
+const navigate = useNavigate();
+
 
 const handleLogin = (e) => {
 e.preventDefaul();
@@ -16,6 +22,20 @@ if(correo === "" || password === ""){
     return;
 }
 alert("Login similado correctamente (esto es momentaneo)");
+
+// SIMULACIÓN DE ROLES
+let rol = "admin";
+
+if(correo.includes("mentor")){
+    rol = "mentor";
+}
+if(correo.includes("aprendiz")){
+    rol = "aprendiz";
+}
+
+login(correo, rol);
+
+navigate("/dashboard");
 };
 
 return(
