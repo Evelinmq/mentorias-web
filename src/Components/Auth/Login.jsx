@@ -81,7 +81,7 @@ return(
 
         </form>
 
-        <p className="register">
+        <p className="register" onClick={() => navigate("/registro")}>
           ¿No tienes cuenta? <span>Crear cuenta</span>
         </p>
 

@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./Components/Auth/Login";
 import MainMenu from "./Components/All/MainMenu";
+import Registro from "./Components/CreacionCuenta/Registro";
 
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoute";
@@ -14,6 +15,11 @@ function App() {
 
         <Route path="/login" element={<PublicRoute />}>
           <Route index element={<Login />} />
+        </Route>
+
+
+        <Route path="/registro" element={<PublicRoute />}>
+          <Route index element={<Registro />} />
         </Route>
 
         <Route element={<ProtectedRoutes />}>
