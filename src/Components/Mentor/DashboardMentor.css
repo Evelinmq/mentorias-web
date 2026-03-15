@@ -1,39 +1,48 @@
-.mentor-container{
-    padding:20px;
+.mentor-container {
+    padding: 20px;
 }
 
-.mentor-header{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
+.mentor-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
-.btn-agregar{
-    background:#132D63;
-    color:white;
-    border:none;
-    padding:10px 30px;
-    border-radius:12px;
-    font-weight:bold;
-    cursor:pointer;
+.btn-agregar {
+    background: #132D63;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.mentor-content{
-    display:flex;
-    gap:30px;
+.mentor-content {
+    display: flex;
+    gap: 30px;
 }
 
-.mentor-calendario{
-    flex:2;
-    background:#f4f4f4;
-    border-radius:15px;
-    padding:30px;
+.mentor-calendario {
+    flex: 2;
+    background: #f4f4f4;
+    border-radius: 15px;
+    padding: 30px;
 }
 
-.mentor-agenda{
-    flex:1;
-    background:white;
-    border-radius:15px;
-    padding:20px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+.mentor-agenda {
+    flex: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.punto {
+    width: 6px;
+    height: 6px;
+    background: #ff5722;
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 4px;
 }
