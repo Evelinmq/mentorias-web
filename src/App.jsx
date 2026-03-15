@@ -7,8 +7,8 @@ import Registro from "./Components/CreacionCuenta/Registro";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoute";
 
-import VerificarCodigo from "./Auth/VerificarCodigo";
-import NuevaContrasena from "./Auth/NuevaContrasena";
+import VerificarCodigo from "./Components/Auth/VerificarCodigo";
+import NuevaContrasena from "./Components/Auth/NuevaContrasena";
 
 function App() {
 
