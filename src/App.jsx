@@ -7,6 +7,9 @@ import Registro from "./Components/CreacionCuenta/Registro";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoute";
 
+import VerificarCodigo from "./Auth/VerificarCodigo";
+import NuevaContrasena from "./Auth/NuevaContrasena";
+
 function App() {
 
   return (
@@ -17,9 +20,16 @@ function App() {
           <Route index element={<Login />} />
         </Route>
 
-
         <Route path="/registro" element={<PublicRoute />}>
           <Route index element={<Registro />} />
+        </Route>
+
+        <Route path="/verificar-codigo" element={<PublicRoute />}>
+          <Route index element={<VerificarCodigo />} />
+        </Route>
+
+        <Route path="/nueva-password" element={<PublicRoute />}>
+          <Route index element={<NuevaContrasena />} />
         </Route>
 
         <Route element={<ProtectedRoutes />}>

@@ -1,55 +1,60 @@
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
-import {alertaCamposVacios} from "../../utils/alerts"
+import { alertaCamposVacios } from "../../utils/alerts";
 import logo from "../../assets/logo.png";
 import "./Login.css";
 
-function Login(){
-const [correo, setCorreo] = useState("");
-const [password, setPassword]= useState("");
-const { login } = useContext(AuthContext);
-const navigate = useNavigate();
+function Login() {
 
+  const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
 
-const handleLogin = (e) => {
-e.preventDefaul();
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-if(correo === "" || password === ""){
-    console.log("Debes de completar todos los campos");
-    alertaCamposVacios();
-    return;
-}
-alert("Login similado correctamente (esto es momentaneo)");
+  const handleLogin = (e) => {
 
-// SIMULACIÓN DE ROLES
-let rol = "admin";
+    e.preventDefault(); 
 
-if(correo.includes("mentor")){
-    rol = "mentor";
-}
-if(correo.includes("aprendiz")){
-    rol = "aprendiz";
-}
+    if (correo === "" || password === "") {
+      console.log("Debes de completar todos los campos");
+      alertaCamposVacios();
+      return;
+    }
 
-login(correo, rol);
+    alert("Login simulado correctamente (esto es momentaneo)");
 
-navigate("/dashboard");
-};
+    // SIMULACIÓN
+    let rol = "admin";
 
-return(
+    if (correo.includes("mentor")) {
+      rol = "mentor";
+    }
+    if (correo.includes("aprendiz")) {
+      rol = "aprendiz";
+    }
+
+    login(correo, rol);
+
+    navigate("/dashboard");
+
+  };
+
+  return (
+
     <div className="login-contenedor">
-    <div className="Circulo1"/>
-    <div className="circulo2"/>
-    <div className="circulo3"/>
-    <div className="circulo4"/>
-    <div className="circulo5"/>
-    <div className="circulo6"/>
-    <div className="circulo7"/>
-    <div className="circulo8"/>
 
-         <div className="login-box">
+      <div className="Circulo1" />
+      <div className="circulo2" />
+      <div className="circulo3" />
+      <div className="circulo4" />
+      <div className="circulo5" />
+      <div className="circulo6" />
+      <div className="circulo7" />
+      <div className="circulo8" />
+
+      <div className="login-box">
 
         <img src={logo} className="login-logo" />
 
@@ -72,8 +77,14 @@ return(
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          <p className="forgot">¿Olvidaste tu contraseña?</p>
+          
+          <p
+            className="forgot"
+            onClick={() => navigate("/verificar-codigo")}
+            style={{ cursor: "pointer" }}
+          >
+            ¿Olvidaste tu contraseña?
+          </p>
 
           <button type="submit" className="login-btn">
             Iniciar Sesión
@@ -87,8 +98,10 @@ return(
 
       </div>
 
-</div>
-);
+    </div>
+
+  );
 
 }
+
 export default Login;
