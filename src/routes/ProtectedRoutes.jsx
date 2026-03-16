@@ -24,7 +24,7 @@ function ProtectedRoutes({ allowedRoles }) {
 
             <div style={{ display: "flex", flex: 1 }}>
                 {/* El Menú Lateral al lado izquierdo */}
-                <Sidebar />
+                
 
                 {/* El Contenido de la página (Carreras, Usuarios, etc.) al lado derecho */}
                 <main style={{ 

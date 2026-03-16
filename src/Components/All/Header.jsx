@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import LogOutIcon from '../../assets/LogOutIcon.png';
-import logo from '../../assets/logo.png'
+import icono from '../../assets/icono.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Header = () => {
       {/* SECCIÓN IZQUIERDA.-.-.-.-.-.*/}
       <div style={styles.leftSection}>
         <div style={styles.logoContainer}>
-          <img src={logo} alt="Logo" style={styles.logoImg} />
+          <img src={icono} alt="Logo" style={styles.logoImg} />
         </div>
         <span style={styles.titleText}>SISTEMA DE MENTORÍAS</span>
       </div>
@@ -68,6 +68,7 @@ const styles = {
     justifyContent: 'center',
   },
   logoImg: {
+    backgroundColor: '#18397F',
     height: '30px',
     width: 'auto',
   },
