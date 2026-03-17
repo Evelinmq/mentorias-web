@@ -14,6 +14,7 @@ function Registro() {
             <div className="circulo4"/>
             <div className="circulo5"/>
             <div className="circulo6"/>
+            <div className="circulo8"/>
             <div className="cuenta-box">
                 <img src={logo} alt="Logo" className="cuenta-logo" />
                 <h1 className="cuenta-title">Registro</h1>
@@ -47,7 +48,12 @@ function Registro() {
                     <div className="form-row">
                     <div className="input-group">
                     <label >Carrera</label>
-                    <input type="text" id="carrera" placeholder="Ingrese su carrera" />
+                    <select id="carrera">
+                        <option value="">Selecciona tu carrera:</option>
+                        <option value="sistemas">Ingenieria en Sistemas</option>
+                        <option value="administracion">Administracion</option>
+                        <option value="mecatronica">Mecatronica</option>
+                    </select>
                     </div>
                     <div className="input-group">
                     <label >Cuatrimestre</label>
@@ -67,7 +73,11 @@ function Registro() {
                     </div>
                     <div className="input-group">
                     <label >Rol</label>
-                    <input type="dropdown" id="rol" placeholder="Seleccione su rol" />
+                    <select id="rol">
+                        <option value="">Selecciona tu rol:</option>
+                        <option value="Mentor">Mentor</option>
+                        <option value="Aprendiz">Aprendiz</option>
+                    </select>
                     </div>
                     </div>
                     <button className="btn" type="submit">Crear Cuenta</button>
