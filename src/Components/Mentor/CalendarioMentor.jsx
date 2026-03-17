@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./DashboardMentor.css";
 
+
+// SOLO ES UN EJEMPLO PARA TENER ALGO EN LO QUE NOS ENSEÑAN COMO HACERLO
 function CalendarioMentor({ mentorias, onSeleccionarDia }) {
 
     const [fechaActual, setFechaActual] = useState(new Date());
