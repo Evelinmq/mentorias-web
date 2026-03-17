@@ -33,6 +33,7 @@ function VerificarCodigo() {
             <div className="circulo4" />
             <div className="circulo5" />
             <div className="circulo6" />
+            <div className="circulo8" />
 
             <div className="cuenta-box">
 
