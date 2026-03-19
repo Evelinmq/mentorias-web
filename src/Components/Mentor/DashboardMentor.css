@@ -47,3 +47,30 @@
     margin: auto;
     margin-top: 4px;
 }
+.react-calendar {
+    border: none;
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    background: white;
+}
+
+.react-calendar__tile--active {
+    background: #132D63 !important;
+    color: white;
+    border-radius: 10px;
+}
+
+.react-calendar__tile:hover {
+    background: #e3e8ff;
+    border-radius: 10px;
+}
+
+.punto {
+    width: 6px;
+    height: 6px;
+    background: #ff5722;
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 4px;
+}

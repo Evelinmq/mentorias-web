@@ -1,83 +1,45 @@
 import { useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import "./DashboardMentor.css";
 
+//libreria
+//npm install react-calendar
 
-// SOLO ES UN EJEMPLO PARA TENER ALGO EN LO QUE NOS ENSEÑAN COMO HACERLO
 function CalendarioMentor({ mentorias, onSeleccionarDia }) {
 
-    const [fechaActual, setFechaActual] = useState(new Date());
+    const [fecha, setFecha] = useState(new Date());
 
-    const año = fechaActual.getFullYear();
-    const mes = fechaActual.getMonth();
+    const manejarCambio = (value) => {
+        setFecha(value);
 
-    const nombreMeses = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
+        // Convertir a formato YYYY-MM-DD
+        const fechaFormateada = value.toISOString().split("T")[0];
 
-    const primerDia = new Date(año, mes, 1).getDay();
-    const diasMes = new Date(año, mes + 1, 0).getDate();
-
-    const cambiarMes = (dir) => {
-        setFechaActual(new Date(año, mes + dir, 1));
+        onSeleccionarDia(fechaFormateada);
     };
 
-    const dias = [];
+    // Para mostrar puntos en días con mentorías
+    const tileContent = ({ date, view }) => {
+        if (view === "month") {
 
-    for (let i = 0; i < primerDia; i++) {
-        dias.push(<div key={"v" + i}></div>);
-    }
+            const fechaStr = date.toISOString().split("T")[0];
 
-    for (let d = 1; d <= diasMes; d++) {
+            const tieneMentorias = mentorias.some(
+                m => m.fecha === fechaStr
+            );
 
-        const fechaCompleta = `${año}-${String(mes + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-
-        const tieneMentorias = mentorias.some(m => m.fecha === fechaCompleta);
-
-        dias.push(
-
-            <div
-                key={d}
-                className="dia"
-                onClick={() => onSeleccionarDia(fechaCompleta)}
-            >
-
-                {d}
-
-                {tieneMentorias && <div className="punto"></div>}
-
-            </div>
-
-        )
-
-    }
+            return tieneMentorias ? <div className="punto"></div> : null;
+        }
+    };
 
     return (
-
-        <div>
-
-            <div className="calendario-header">
-
-                <button onClick={() => cambiarMes(-1)}>◀</button>
-
-                <h3>
-                    {nombreMeses[mes]} {año}
-                </h3>
-
-                <button onClick={() => cambiarMes(1)}>▶</button>
-
-            </div>
-
-            <div className="grid-calendario">
-
-                {dias}
-
-            </div>
-
-        </div>
-
-    )
-
+        <Calendar
+            onChange={manejarCambio}
+            value={fecha}
+            tileContent={tileContent}
+        />
+    );
 }
 
 export default CalendarioMentor;
