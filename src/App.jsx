@@ -4,6 +4,10 @@ import Login from "./Components/Auth/Login";
 import MainMenu from "./Components/All/MainMenu";
 import Registro from "./Components/CreacionCuenta/Registro";
 
+
+import DashboardAprendiz from "./Components/Aprendiz/DashboardAprendiz";
+
+
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import PublicRoute from "./routes/PublicRoute";
 
@@ -19,6 +23,12 @@ function App() {
         <Route path="/login" element={<PublicRoute />}>
           <Route index element={<Login />} />
         </Route>
+
+
+          <Route element={<ProtectedRoutes />}>
+              <Route path="/dashboard" element={<MainMenu />} />
+              <Route path="/aprendiz/dashboard" element={<DashboardAprendiz />} />
+          </Route>
 
         <Route path="/registro" element={<PublicRoute />}>
           <Route index element={<Registro />} />

@@ -2,7 +2,6 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import Header from "../Components/All/Header";
-import MainMenu from "../Components/All/MainMenu";
 ;
 
 function ProtectedRoutes({ allowedRoles }) {
@@ -27,13 +26,13 @@ function ProtectedRoutes({ allowedRoles }) {
                 
 
                 {/* El Contenido de la página (Carreras, Usuarios, etc.) al lado derecho */}
-                <main style={{ 
-                    flex: 1, 
-                    padding: "20px", 
-                    backgroundColor: "#f4f7f9", 
-                    overflowY: "auto" 
+                <main style={{
+                    flex: 1,
+                    padding: "20px",
+                    backgroundColor: "#f4f7f9",
+                    overflowY: "auto"
                 }}>
-                    <MainMenu />
+                    <Outlet />
                 </main>
             </div>
         </div>
