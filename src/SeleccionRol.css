@@ -1,0 +1,74 @@
+.rol-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f7f9;
+    position: relative;
+    overflow: hidden;
+}
+
+.rol-card {
+    background: #eeeeee; 
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    z-index: 10;
+}
+
+.rol-logo {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+.rol-title {
+    color: #132D63;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+}
+
+.rol-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.btn-rol {
+    background-color: #132D63;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-rol:hover {
+    background-color: #18397F;
+}
+
+.solicitud-header {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.solicitud-body p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.notificacion-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 30px;
+    text-align: left;
+}
