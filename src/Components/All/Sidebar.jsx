@@ -14,27 +14,28 @@ function Sidebar() {
 
     return (
         <aside className="sidebar">
-            <nav className="sidebar-nav">
-                <NavLink to="/dashboard" className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>
-                    <i className="bi bi-house"></i> Inicio
+            <div className="sidebar-menu">
+                <h2 className="sidebar-title">Menú</h2>
+                <NavLink to="/dashboard" className={({isActive}) => isActive ? "nav-item active" : "nav-item"}>
+                    Inicio
                 </NavLink>
                 
                 {user?.rol === "mentor" && (
-                    <NavLink to="/mentor/dashboard" className="nav-link">
-                        <i className="bi bi-calendar-event"></i> Mi Agenda
+                    <NavLink to="/mentor/dashboard" className="nav-item">
+                        Mi Agenda
                     </NavLink>
                 )}
 
                 {user?.rol === "aprendiz" && (
-                    <NavLink to="/aprendiz/dashboard" className="nav-link">
-                        <i className="bi bi-book"></i> Buscar Mentor
+                    <NavLink to="/aprendiz/dashboard" className="nav-item">
+                        Mis Mentorías
                     </NavLink>
                 )}
 
-                <NavLink to="/perfil" className="nav-link">
-                    <i className="bi bi-person"></i> Mi Perfil
+                <NavLink to="/perfil" className="nav-item">
+                    Mi Perfil
                 </NavLink>
-            </nav>
+            </div>
 
             <button className="btn-logout" onClick={handleLogout}>
                 Cerrar Sesión
