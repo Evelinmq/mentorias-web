@@ -23,21 +23,29 @@ function Login() {
       return;
     }
 
-    alert("Login simulado correctamente (esto es momentaneo)");
 
     // SIMULACIÓN
-    let rol = "admin";
+    let rol;
 
-    if (correo.includes("mentor")) {
+    if (correo.includes("admin@utez")) {
+      rol = "admin";
+    }
+    if (correo.includes("mentor@utez")) {
       rol = "mentor";
     }
-    if (correo.includes("aprendiz")) {
+    if (correo.includes("aprendiz@utez")) {
       rol = "aprendiz";
     }
 
     login(correo, rol);
 
+    if (rol === "admin") {
     navigate("/dashboard");
+    } else if (rol === "mentor") {
+    navigate("/mentor/dashboard");
+    } else if (rol === "aprendiz") {
+    navigate("/aprendiz/dashboard");
+    }
 
   };
 

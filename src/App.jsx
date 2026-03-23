@@ -6,6 +6,7 @@ import Registro from "./Components/CreacionCuenta/Registro";
 
 
 import DashboardAprendiz from "./Components/Aprendiz/DashboardAprendiz";
+import DashboardMentor from "./Components/Mentor/DashboardMentor";
 
 
 import ProtectedRoutes from "./routes/ProtectedRoutes";
@@ -25,8 +26,12 @@ function App() {
         </Route>
 
 
-          <Route element={<ProtectedRoutes />}>
+          <Route element={<ProtectedRoutes allowedRoles={["aprendiz"]}/>}>
               <Route path="/aprendiz/dashboard" element={<DashboardAprendiz />} />
+          </Route>
+
+          <Route element={<ProtectedRoutes allowedRoles={["mentor"]}/>}>
+          <Route path="/mentor/dashboard" element={<DashboardMentor />} />
           </Route>
 
         <Route path="/registro" element={<PublicRoute />}>
@@ -41,7 +46,7 @@ function App() {
           <Route index element={<NuevaContrasena />} />
         </Route>
 
-        <Route element={<ProtectedRoutes />}>
+        <Route element={<ProtectedRoutes allowedRoles={["admin"]}/>}>
           <Route path="/dashboard" element={<MainMenu />} />
         </Route>
 

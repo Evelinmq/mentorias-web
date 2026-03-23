@@ -8,7 +8,14 @@ function ProtectedRoutes({ allowedRoles }) {
     const { user } = useContext(AuthContext);
 
     if (!user) return <Navigate to="/login" replace />;
-    if (allowedRoles && !allowedRoles.includes(user.rol)) return <Navigate to="/dashboard" replace />;
+    if (allowedRoles && !allowedRoles.includes(user.rol)) 
+        if (allowedRoles && !allowedRoles.includes(user.rol)) {
+
+    if (user.rol === "admin") return <Navigate to="/dashboard" replace />;
+    if (user.rol === "mentor") return <Navigate to="/mentor/dashboard" replace />;
+    if (user.rol === "aprendiz") return <Navigate to="/aprendiz/dashboard" replace />;
+
+}
 
     return (
         <div className="layout-wrapper">
