@@ -1,0 +1,13 @@
+.historial-card {
+    border-left-width: 4px;
+    border-left-style: solid;
+}
+
+.historial-tomada   { border-left-color: var(--green); }
+.historial-cancelada { border-left-color: #555; }
+
+.card-motivo {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-mid);
+}

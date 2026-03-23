@@ -26,7 +26,6 @@ function App() {
 
 
           <Route element={<ProtectedRoutes />}>
-              <Route path="/dashboard" element={<MainMenu />} />
               <Route path="/aprendiz/dashboard" element={<DashboardAprendiz />} />
           </Route>
 
