@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './MainMenu.css';
-import VistaReportes from '../Admin/VistaReportes';
-import VistaUsuarios from '../Admin/VistaUsuarios';
-import VistaMaterias from '../Admin/VistaMaterias';
-import VistaCarreras from '../Admin/VistaCarreras';
-import Header from "../All/Header";
+import VistaReportes from './VistaReportes.jsx';
+import VistaUsuarios from './VistaUsuarios.jsx';
+import VistaMaterias from './VistaMaterias.jsx';
+import VistaCarreras from './VistaCarreras.jsx';
+import Header from "../All/Header.jsx";
 
 
 function MainMenu() {

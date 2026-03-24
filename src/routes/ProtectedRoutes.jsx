@@ -21,7 +21,6 @@ function ProtectedRoutes({ allowedRoles }) {
         <div className="layout-wrapper">
             <Header />
             <div className="layout-body" style={{ display: "flex", flex: 1 }}>
-                <Sidebar />
                 <main className="main-content" style={{ flex: 1, padding: "20px", backgroundColor: "#f4f7f9" }}>
                     <Outlet />
                 </main>
