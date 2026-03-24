@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./Components/Auth/Login";
-import MainMenu from "./Components/All/MainMenu";
+import MainMenu from "./Components/Admin/MainMenu.jsx";
 import Registro from "./Components/CreacionCuenta/Registro";
 
 

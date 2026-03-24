@@ -1,12 +1,14 @@
 .sidebar {
     width: 250px;
     background-color: #ffffff;
-    height: calc(100vh - 70px); /* Ajustar según altura de tu Header */
+    height: calc(100vh - 70px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 20px;
     padding: 20px;
     border-right: 1px solid #e0e4e9;
+    box-sizing: border-box;
 }
 
 .sidebar-nav {

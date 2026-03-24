@@ -53,6 +53,7 @@ const styles = {
     position: 'sticky',
     top: 0,
     zIndex: 1000,
+    boxSizing: 'border-box'
   },
   leftSection: {
     display: 'flex',
