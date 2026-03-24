@@ -3,15 +3,32 @@ import { useContext } from "react";
 import { AuthContext } from "../../AuthContext";
 import LogOutIcon from '../../assets/LogOutIcon.png';
 import icono from '../../assets/icono.png';
+import Swal from "sweetalert2";
+
 
 const Header = () => {
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    console.log("Cerrando sesión...");
-    logout();
-    navigate("/login");
+   Swal.fire({
+      title: "¿Cerrar sesión?",
+      text: "Tendrás que ingresar tus credenciales nuevamente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#18397F", 
+      cancelButtonColor: "rgb(158, 155, 155)",
+      confirmButtonText: "Sí, salir",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true 
+    }).then((result) => {
+      if (result.isConfirmed) {
+    
+        logout();
+        navigate("/login", { replace: true });
+        
+      }
+    });
   };
 
   return (
