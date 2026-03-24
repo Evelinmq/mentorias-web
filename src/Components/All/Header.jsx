@@ -1,41 +1,38 @@
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../AuthContext";
 import LogOutIcon from '../../assets/LogOutIcon.png';
 import icono from '../../assets/icono.png';
 
 const Header = () => {
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
 
   const handleLogout = () => {
-    // Borrar el token/sesión del AuthContext
     console.log("Cerrando sesión...");
-    localStorage.removeItem('token');
+    logout();
     navigate("/login");
   };
 
   return (
-    <header style={styles.header}>
-      {/* SECCIÓN IZQUIERDA.-.-.-.-.-.*/}
-      <div style={styles.leftSection}>
-        <div style={styles.logoContainer}>
-          <img src={icono} alt="Logo" style={styles.logoImg} />
+      <header style={styles.header}>
+        <div style={styles.leftSection}>
+          <div style={styles.logoContainer}>
+            <img src={icono} alt="Logo" style={styles.logoImg} />
+          </div>
+          <span style={styles.titleText}>SISTEMA DE MENTORÍAS</span>
         </div>
-        <span style={styles.titleText}>SISTEMA DE MENTORÍAS</span>
-      </div>
 
-      {/* SECCIÓN DERECHA-.-.-.-.-.*/}
-      <div style={styles.rightSection}>
+        <div style={styles.rightSection}>
+          <button onClick={handleLogout} style={styles.iconButton}>
+            <img src={LogOutIcon} alt="Cerrar sesión" />
+          </button>
 
-        <button onClick={handleLogout} style={styles.iconButton}>
-          <img src={LogOutIcon} alt="Cerrar sesión"/>
-        </button>
-
-        {/* Círculo de Perfil*/}
-        <div style={styles.avatarCircle}>
-            {/*Colocar imagen del perfil*/}
-          <img  />
+          <div style={styles.avatarCircle}>
+            <img alt="" />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
   );
 };
 

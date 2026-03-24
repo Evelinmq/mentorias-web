@@ -29,12 +29,15 @@ function Login() {
 
     if (correo.includes("admin@utez")) {
       rol = "admin";
-    }
-    if (correo.includes("mentor@utez")) {
+    } else if (correo.includes("mentor@utez")) {
       rol = "mentor";
-    }
-    if (correo.includes("aprendiz@utez")) {
+    } else if (correo.includes("aprendiz@utez")) {
       rol = "aprendiz";
+    }
+
+    if (!rol) {
+      alert("Correo no válido para la simulación");
+      return;
     }
 
     login(correo, rol);
