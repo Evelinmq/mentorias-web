@@ -7,6 +7,7 @@ import { alertaCamposCaracteres, alertaCamposVacios } from "../../utils/alerts";
 function Registro() {
     const navigate = useNavigate();
 
+    //Estado para los campos del formulario
     const [formData, setFormData] = React.useState({
         nombre: "",
         ApellidoPaterno: "",
@@ -30,7 +31,7 @@ function Registro() {
 
 
 
-
+        //limpieza de espacio
         const { nombre, ApellidoPaterno, ApellidoMaterno, matricula, carrera, cuatrimestre, correo, password, rol } = formData;
         
         const n = nombre.trim();
@@ -43,6 +44,7 @@ function Registro() {
             return;
         }
 
+        //validacion de caracteres
         const regexNombres = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
         if (nombre.trim() !== " " && !regexNombres.test(nombre.trim())) {
@@ -60,6 +62,7 @@ function Registro() {
             return;
         }
 
+        // Aquí iría la lógica para enviar los datos al backend o realizar alguna acción con ellos
         console.log("Datos listos para enviar:", { ...formData, nombre: n, apellidoP: ap, apellidoM: am });
         alertaExito();
         navigate("/login");
