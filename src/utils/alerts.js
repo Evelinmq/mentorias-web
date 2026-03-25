@@ -78,6 +78,22 @@ export const toast = Swal.mixin({
   timerProgressBar: true
 });
 
+export const confirmarRechazarSolicitud = async () => {
+  return await Swal.fire({
+    title: "¿Rechazar solicitud?",
+    text: "El usuario no será aceptado en el sistema",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Rechazar",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      confirmButton: "swal-confirm-btn",
+      cancelButton: "swal-cancel-btn"
+    },
+    buttonsStyling: false
+  }).then(result => result.isConfirmed);
+};
+
 //Esto es lo qi deben importar en sus archivos para hacer uso de las alertas:
 // import { ... } from "../../utils/alerts";
 

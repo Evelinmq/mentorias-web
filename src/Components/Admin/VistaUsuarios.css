@@ -128,3 +128,10 @@
   height: 16px;
   object-fit: contain;
 }
+
+
+.usuarios-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+}

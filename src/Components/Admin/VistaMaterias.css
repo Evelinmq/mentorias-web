@@ -53,3 +53,9 @@
   background-color: #000;
   border: none;
 }
+
+.materias-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+}

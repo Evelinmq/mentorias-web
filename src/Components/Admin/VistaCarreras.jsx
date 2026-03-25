@@ -3,13 +3,22 @@ import { useForm } from 'react-hook-form';
 import './VistaCarreras.css';
 import './ModalesGlobal.css';
 
-import Input from '../Common/Input';
-import Button from '../Common/Button';
+import {
+  alertaExito,
+  alertaCamposVacios,
+  alertaError
+} from "../../utils/alerts";
 
-import { alertaExito, alertaCamposVacios, alertaError } from "../../utils/alerts";
+import Table from "../Common/Table";
+import ActionButtons from "../Common/ActionButtons";
+
+import Input from "../Common/Input";
+import Button from "../Common/Button";
 
 const VistaCarreras = () => {
+
   const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const {
     register,
@@ -18,59 +27,147 @@ const VistaCarreras = () => {
     formState: { errors }
   } = useForm();
 
+  //AGREGAR
+  const handleAgregar = () => {
+    setIsEditing(false);
+
+    reset({
+      nombre: ''
+    });
+
+    setShowModal(true);
+  };
+
+  // EDITAR
+  const handleEditar = (carrera) => {
+    setIsEditing(true);
+
+    reset({
+      nombre: carrera.nombre || ''
+    });
+
+    setShowModal(true);
+  };
+
+  // SUBMIT
   const onSubmit = (data) => {
     data.nombre = data.nombre.trim();
 
-    alertaExito("Carrera guardada");
-    console.log(data);
+    alertaExito(
+        isEditing
+            ? "Carrera actualizada correctamente"
+            : "Carrera guardada correctamente"
+    );
 
     reset();
     setShowModal(false);
   };
 
+  //VALIDACIONES
   const onError = () => {
-    if (errors.nombre?.type === "validate") {
-      alertaError("Sin espacios al inicio o final");
-      return;
+
+    if (errors.nombre) {
+      if (errors.nombre.type === "required") return alertaCamposVacios();
+      if (errors.nombre.type === "pattern") return alertaError("Solo letras permitidas");
+      if (errors.nombre.type === "validate") return alertaError("Sin espacios al inicio o final");
     }
+
     alertaCamposVacios();
   };
 
+  // DATOS
+  const carreras = [
+    { nombre: 'Desarrollo de software' },
+    { nombre: 'Redes y ciberseguridad' }
+  ];
+
   return (
-    <div className="carreras-container">
+      <div className="carreras-container">
 
-      <Button text="+ Agregar" className="btn-agregar" onClick={() => setShowModal(true)} />
 
-      {showModal && (
-        <div className='modal-overlay'>
-          <div className='modal-content'>
-            <h2>Agregar Carrera</h2>
+        {/* CARD BLANCO */}
+        <div className="carreras-card">
 
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
+          {/* HEADER */}
+          <header className="carreras-header">
+            <div className="header-left">
+              <Button
+                  text="+ Agregar"
+                  className="btn-agregar"
+                  onClick={handleAgregar}
+              />
+            </div>
+          </header>
 
-              <div className='modal-center'>
-                <Input
-                  placeholder="Carrera"
-                  register={register}
-                  name="nombre"
-                  rules={{
-                    required: true,
-                    pattern: /^[A-Za-zÁÉÍÓÚñÑ\s]+$/,
-                    validate: v => v.trim() === v
-                  }}
-                />
-              </div>
+          {/* TABLA REUTILIZABLE */}
+          <Table
+              data={carreras}
+              columns={[
+                { header: "Carrera", accessor: "nombre" }
+              ]}
+              renderActions={(carrera) => (
+                  <ActionButtons
+                      onEdit={() => handleEditar(carrera)}
+                      showDelete={false}
+                      showBlock={false}
+                  />
+              )}
+          />
 
-              <div className='modal-actions'>
-                <Button text="Cancelar" className="btn-cancelar" onClick={() => setShowModal(false)} />
-                <Button text="Guardar" type="submit" className="btn-guardar" />
-              </div>
-
-            </form>
-          </div>
         </div>
-      )}
-    </div>
+
+        {/* MODAL */}
+        {showModal && (
+            <div className='modal-overlay'>
+              <div className='modal-content'>
+
+                <h2 className='modal-title'>
+                  {isEditing ? "Editar carrera" : "Agregar carrera"}
+                </h2>
+
+                <form className='modal-form' onSubmit={handleSubmit(onSubmit, onError)}>
+
+                  <div className='modal-center'>
+
+                    <Input
+                        placeholder="Carrera"
+                        register={register}
+                        name="nombre"
+                        rules={{
+                          required: true,
+                          pattern: /^[A-Za-zÁÉÍÓÚñÑ\s]+$/,
+                          validate: v => v.trim() === v
+                        }}
+                    />
+
+                  </div>
+
+                  <div className='modal-actions'>
+
+                    <Button
+                        text="Cancelar"
+                        className="btn-cancelar"
+                        onClick={() => {
+                          setShowModal(false);
+                          reset();
+                        }}
+                    />
+
+                    <Button
+                        text={isEditing ? "Actualizar" : "Guardar"}
+                        type="submit"
+                        className="btn-guardar"
+                    />
+
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+        )}
+
+      </div>
   );
 };
 
