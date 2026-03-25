@@ -9,6 +9,15 @@ export const swalBase = Swal.mixin({
   }
 });
 
+
+export const alertaCamposCaracteres = (mensaje = "Solo se permiten letras en este campo") => {
+  return swalBase.fire({
+    icon: "error",
+    title: "Error",
+    text: mensaje
+  });
+};
+
 export const alertaCamposVacios = () => {
   return swalBase.fire({
     icon: "warning",

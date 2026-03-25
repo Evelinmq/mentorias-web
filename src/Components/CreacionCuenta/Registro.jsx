@@ -2,9 +2,68 @@ import React from "react";
 import "./Registro.css";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { alertaCamposCaracteres, alertaCamposVacios } from "../../utils/alerts";
 
 function Registro() {
     const navigate = useNavigate();
+
+    const [formData, setFormData] = React.useState({
+        nombre: "",
+        ApellidoPaterno: "",
+        ApellidoMaterno: "",
+        matricula: "",
+        carrera: "",
+        cuatrimestre: "",
+        correo: "",
+        password: "",
+        rol: ""
+    }); 
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
+
+    const handleRegistro = (e) => {
+        e.preventDefault();
+
+
+
+
+        const { nombre, ApellidoPaterno, ApellidoMaterno, matricula, carrera, cuatrimestre, correo, password, rol } = formData;
+        
+        const n = nombre.trim();
+        const ap = ApellidoPaterno.trim();
+        const am = ApellidoMaterno.trim();
+
+        // Validación de campos vacíos
+        if (!n || !ap || !am || !matricula || !carrera || !cuatrimestre || !correo || !password || !rol) {
+            alertaCamposVacios();
+            return;
+        }
+
+        const regexNombres = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+        if (nombre.trim() !== " " && !regexNombres.test(nombre.trim())) {
+            alertaCamposCaracteres("El nombre solo debe contener letras.");
+            return;
+        }
+
+        if (ApellidoPaterno.trim() !== " " && !regexNombres.test(ApellidoPaterno.trim())) {
+            alertaCamposCaracteres("El apellido paterno solo debe contener letras.");
+            return;
+        }
+
+        if (ApellidoMaterno.trim() !== " " && !regexNombres.test(ApellidoMaterno.trim())) {
+            alertaCamposCaracteres("El apellido materno solo debe contener letras.");
+            return;
+        }
+
+        console.log("Datos listos para enviar:", { ...formData, nombre: n, apellidoP: ap, apellidoM: am });
+        alertaExito();
+        navigate("/login");
+    };
 
     return (
         <div className="creacion-contenedor">
@@ -18,29 +77,33 @@ function Registro() {
             <div className="cuenta-box">
                 <img src={logo} alt="Logo" className="cuenta-logo" />
                 <h1 className="cuenta-title">Registro</h1>
-                <form>
+                <form onSubmit={handleRegistro}>
                     <div className="form-row">
 
                         <div className="input-group">
                     <label >Nombre</label>
-                    <input type="text" id="nombre" placeholder="Ingrese su nombre" />
+                    <input type="text" id="nombre" placeholder="Ingrese su nombre" 
+                    value={formData.nombre} onChange={handleChange}/>
                     </div>
 
                     <div className="input-group">
                     <label >Apellido Paterno</label>
-                    <input type="text" id="ApellidoPaterno" placeholder="Ingrese su apellido paterno" />
+                    <input type="text" id="ApellidoPaterno" placeholder="Ingrese su apellido paterno"
+                    value={formData.ApellidoPaterno} onChange={handleChange} />
                     </div>
                     </div>
 
                     <div className="form-row">
                         <div className="input-group">
                     <label >Apellido Materno</label>
-                    <input type="text" id="ApellidoMaterno" placeholder="Ingrese su apellido materno" />
+                    <input type="text" id="ApellidoMaterno" placeholder="Ingrese su apellido materno"
+                    value={formData.ApellidoMaterno} onChange={handleChange} />
                         </div>
 
                     <div className="input-group">
                     <label >Matrícula</label>
-                    <input type="text" id="matricula" placeholder="Ingrese su matrícula" />
+                    <input type="text" id="matricula" placeholder="Ingrese su matrícula" 
+                    value={formData.matricula} onChange={handleChange}/>
                     </div>
 
                     </div>
@@ -48,7 +111,7 @@ function Registro() {
                     <div className="form-row">
                     <div className="input-group">
                     <label >Carrera</label>
-                    <select id="carrera">
+                    <select id="carrera" value={formData.carrera} onChange={handleChange}>
                         <option value="">Selecciona tu carrera:</option>
                         <option value="sistemas">Ingenieria en Sistemas</option>
                         <option value="administracion">Administracion</option>
@@ -57,7 +120,7 @@ function Registro() {
                     </div>
                     <div className="input-group">
                     <label >Cuatrimestre</label>
-                    <select id="cuatrimestre">
+                    <select id="cuatrimestre" value={formData.cuatrimestre} onChange={handleChange}>
                         <option value="">Selecciona tu cuatrimestre:</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -76,16 +139,18 @@ function Registro() {
                     <div className="form-row">
                         <div className="input-group">
                     <label >Correo</label>
-                    <input type="email" id="correo" placeholder="Ingrese su email" />
+                    <input type="email" id="correo" placeholder="Ingrese su email" 
+                    value={formData.correo} onChange={handleChange}/>
                     </div>
 
                     <div className="input-group">
                     <label >Contraseña</label>
-                    <input type="password" id="password" placeholder="Ingrese su contraseña" />
+                    <input type="password" id="password" placeholder="Ingrese su contraseña" 
+                    value={formData.password} onChange={handleChange}/>
                     </div>
                     <div className="input-group">
                     <label >Rol</label>
-                    <select id="rol">
+                    <select id="rol" value={formData.rol} onChange={handleChange}>
                         <option value="">Selecciona tu rol:</option>
                         <option value="Mentor">Mentor</option>
                         <option value="Aprendiz">Aprendiz</option>
