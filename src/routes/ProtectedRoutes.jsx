@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import Header from "../Components/All/Header";
-import Sidebar from "../Components/All/Sidebar";
+import Sidebar from "../Components/Common/Sidebar.jsx";
 
 function ProtectedRoutes({ allowedRoles }) {
     const { user } = useContext(AuthContext);

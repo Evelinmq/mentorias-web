@@ -1,6 +1,6 @@
 import MentoriaCard from "../Common/MentoriaCard";
 
-function SolicitudCard({ mentor }) {
+export default function SolicitudCard({ mentor }) {
     const [tema, setTema] = useState("");
 
     const handleConfirmar = () => {
