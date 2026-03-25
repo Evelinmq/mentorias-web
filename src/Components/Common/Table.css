@@ -1,0 +1,42 @@
+/* TABLA */
+
+.tabla-wrapper {
+    overflow-x: auto;
+}
+
+.tabla-reportes {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+}
+
+/* cabeceras */
+.tabla-reportes thead th {
+    text-align: left;
+    padding: 15px;
+    color: #8c8c8c;
+    font-weight: 500;
+    background-color: #fff;
+}
+
+/* filas */
+.tabla-reportes tbody td {
+    padding: 15px;
+    color: #132D63;
+    font-weight: 400;
+}
+
+.tabla-reportes tbody tr {
+    cursor: pointer;
+}
+
+.tabla-reportes tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* acciones */
+.acciones-celda {
+    display: flex;
+    gap: 10px;
+}
