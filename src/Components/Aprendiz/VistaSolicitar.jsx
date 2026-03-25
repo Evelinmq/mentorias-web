@@ -1,36 +1,49 @@
 import MentoriaCard from "../Common/MentoriaCard";
 
-export default function SolicitudCard({ mentor }) {
-    const [tema, setTema] = useState("");
+const HISTORIAL = [
+    { 
+        id: 1, 
+        email: "20243ds149@utez.edu.mx", 
+        fecha: "20/03/2026",
+        nombre: "Gustavo Diaz Peña", 
+        materia: "Matematica aplicada", 
+        tema: "Derivadas complejas", 
+        aula: "A2 – Docencia II", 
+        hora: "08:00 – 10:00",
+        tipo: "tomada" 
+    },
+    { 
+        id: 2, 
+        email: "admin@utez.edu.mx", 
+        fecha: "15/03/2026",
+        nombre: "Ana Martínez", 
+        materia: "Física II", 
+        tema: "Termodinámica",
+        aula: "Lab B", 
+        hora: "12:00 – 14:00",
+        tipo: "cancelada",
+        motivoCancelacion: "Profesor indispuesto"
+    }
+];
 
-    const handleConfirmar = () => {
-        if (!tema.trim()) return;
-        alert("Solicitud enviada");
-    };
-
+export default function VistaHistorial() {
     return (
-        <MentoriaCard
-            data={{
-                ...mentor,
-                fecha: "30/01/2026"
-            }}
-            extraContent={
-                <>
-                    <input
-                        type="text"
-                        placeholder="Tema"
-                        value={tema}
-                        onChange={(e) => setTema(e.target.value.trimStart())}
-                    />
-
-                    <button
-                        disabled={!tema.trim()}
-                        onClick={handleConfirmar}
-                    >
-                        Confirmar
-                    </button>
-                </>
-            }
-        />
+        <div className="cards-grid">
+            {HISTORIAL.map((item) => (
+                <MentoriaCard
+                    key={item.id}
+                    data={item}
+                    status={item.tipo === "tomada" ? "confirmada" : "cancelada"}
+                    extraContent={
+                        item.tipo === "cancelada" && (
+                            <div className="card-field motivo-error">
+                                <span className="card-label">Motivo:</span>
+                                <span className="card-value">{item.motivoCancelacion}</span>
+                            </div>
+                        )
+                    }
+                />
+            ))}
+        </div>
     );
 }
