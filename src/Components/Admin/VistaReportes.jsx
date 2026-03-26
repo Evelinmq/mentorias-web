@@ -3,6 +3,12 @@ import './VistaReportes.css';
 import DownloadIcon from '../../assets/DownloadIcon.png';
 import { obtenerDatos } from "../../utils/api";
 
+import ReportTable from "../Common/ReportTable";
+import DateInput from "../Common/DateInput.jsx";
+import DownloadButton from "../Common/DownloadButton.jsx";
+import Button from "../Common/Button";
+import SearchBar from "../Common/SearchBar";
+
 const VistaReportes = () => {
 
   // --- ESTADOS PARA DATOS ---
@@ -12,6 +18,10 @@ const VistaReportes = () => {
   // --- ESTADOS DE UI (BUSCADORES) ---
   const [mostrarBuscadorMentor, setMostrarBuscadorMentor] = useState(false);
   const [mostrarBuscadorMateria, setMostrarBuscadorMateria] = useState(false);
+
+  // --- Filtros de fecha ---
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [fechaFin, setFechaFin] = useState('');
 
   // --- ESTADOS PARA FILTROS ---
   const [filtroMentor, setFiltroMentor] = useState('');
@@ -34,142 +44,133 @@ const VistaReportes = () => {
     cargarTodasLasMentorias();
   }, []);
 
+
+  const mentoriasFiltradas = mentorias.filter((m) => {
+    // 1. Blindaje para Mentor (evita que truene si mentor es null)
+    const nombreCompleto = `${m.mentor?.nombre || ''} ${m.mentor?.apellidos || ''}`.toLowerCase();
+    const matchMentor = nombreCompleto.includes(filtroMentor.toLowerCase());
+
+    // 2. Blindaje para Materia
+    const nombreMateria = (m.materia?.nombre || "").toLowerCase();
+    const matchMateria = nombreMateria.includes(filtroMateria.toLowerCase());
+
+    // 3. Blindaje para Fechas
+    if (!fechaInicio && !fechaFin) return matchMentor && matchMateria;
+
+    const fechaMentoria = new Date(m.fecha);
+    // Validamos que la fecha sea válida antes de comparar
+    if (isNaN(fechaMentoria.getTime())) return matchMentor && matchMateria;
+
+    const inicio = fechaInicio ? new Date(fechaInicio) : null;
+    const fin = fechaFin ? new Date(fechaFin) : null;
+
+    let matchFecha = true;
+    if (inicio && fin) {
+      matchFecha = fechaMentoria >= inicio && fechaMentoria <= fin;
+    } else if (inicio) {
+      matchFecha = fechaMentoria >= inicio;
+    } else if (fin) {
+      matchFecha = fechaMentoria <= fin;
+    }
+
+    return matchMentor && matchMateria && matchFecha;
+  });
+
+  const columnas = [
+    { header: "Fecha", accessor: "fecha" },
+    {
+      header: "Materia",
+      render: (row) => row.materia?.nombre || "Sin materia"
+    },
+    {
+      header: "Mentor",
+      render: (row) => `${row.mentor?.nombre || ''} ${row.mentor?.apellidos || ''}`
+    },
+    {
+      header: "Carrera",
+      render: (row) => row.mentor?.carrera?.nombre || "N/A"
+    },
+    {
+      header: "Tema",
+      render: (row) => row.temas?.length > 0
+          ? row.temas.map(t => t.nombre).join(", ")
+          : "General"
+    },
+    {
+      header: "Hora",
+      render: (row) => `${row.horaInicio} - ${row.horaFin}`
+    },
+  ];
+
   return (
     <div className="reportes-container">
       {/* --- INICIO HEADER --- */}
       <header className="reportes-header">
-        
-        <div className="header-left">
-            {/* BOTÓN MENTORES*/}
-          <button 
-            className={`btn-filtro ${mostrarBuscadorMentor ? 'btn-active-black' : 'btn-inactive-white'}`}
-            // Mostrar el buscador de mentor
-            onClick={() => setMostrarBuscadorMentor(!mostrarBuscadorMentor)}
-          >
-            Mentores
-          </button>
 
-            {/* BOTÓN MATERIAS*/}
-          <button 
-            className={`btn-filtro ${mostrarBuscadorMateria ? 'btn-active-black' : 'btn-inactive-white'}`}
-            // Mostrar buscador
-            onClick={() => setMostrarBuscadorMateria(!mostrarBuscadorMateria)}
-          >
-            Materias
-          </button>
+        <div className="header-left">
+          {/* BOTÓN FILTRO MENTORES */}
+          <Button
+              text="Mentores"
+              className={`btn-filtro ${mostrarBuscadorMentor ? 'btn-active-black' : 'btn-inactive-white'}`}
+              onClick={() => setMostrarBuscadorMentor(!mostrarBuscadorMentor)}
+          />
+
+          {/* BOTÓN FILTRO MATERIAS */}
+          <Button
+              text="Materias"
+              className={`btn-filtro ${mostrarBuscadorMateria ? 'btn-active-black' : 'btn-inactive-white'}`}
+              onClick={() => setMostrarBuscadorMateria(!mostrarBuscadorMateria)}
+          />
         </div>
 
         <div className="header-right">
-          
-          {/* Buscador de mentores */}
+
+          // Buscador de mentores
           {mostrarBuscadorMentor && (
-            <div className="buscador-wrapper animation-fade-in">
-              <span className="icono-buscar">&#128269;</span>
-              <input 
-                type="text" 
-                placeholder="Buscar mentor" 
-                className="input-buscar" 
-                value={filtroMentor}
-                onChange={(e) => setFiltroMentor(e.target.value)}
+              <SearchBar
+                  placeholder="Buscar mentor"
+                  value={filtroMentor}
+                  onChange={(e) => setFiltroMentor(e.target.value)}
               />
-            </div>
           )}
 
-          {/* Buscador de materias */}
+          // Buscador de materias
           {mostrarBuscadorMateria && (
-            <div className="buscador-wrapper animation-fade-in">
-              <span className="icono-buscar">&#128269;</span>
-              <input 
-                type="text" 
-                placeholder="Buscar materia" 
-                className="input-buscar" 
-                value={filtroMateria}
-                onChange={(e) => setFiltroMateria(e.target.value)}
+              <SearchBar
+                  placeholder="Buscar materia"
+                  value={filtroMateria}
+                  onChange={(e) => setFiltroMateria(e.target.value)}
               />
-            </div>
           )}
 
-          <div className="fecha-wrapper">
-            <input
-                type="text"
-                placeholder="Fecha inicio"
-                className="input-fecha"
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => {
-                if (!e.target.value) e.target.type = "text";
-                }}
-                onChange={(e) => console.log(e.target.value)}
-            />
-          </div>
-        
-          <div className="fecha-wrapper">
-            <input
-                type="text"
-                placeholder="Fecha fin"
-                className="input-fecha"
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => {
-                if (!e.target.value) e.target.type = "text";
-                }}
-                onChange={(e) => console.log(e.target.value)}
-            />
-          </div>
+          <DateInput
+              placeholder="Fecha inicio"
+              value={fechaInicio}
+              onChange={(e) => setFechaInicio(e.target.value)}
+          />
 
-          <button className="btn-descargar-img">
-            <img src={DownloadIcon} alt="Descargar reporte" className="img-descarga" />
-          </button>
+          <DateInput
+              placeholder="Fecha fin"
+              value={fechaFin}
+              onChange={(e) => setFechaFin(e.target.value)}
+          />
+
+          <DownloadButton
+              icon={DownloadIcon}
+              onClick={() => alert("Preparando motores para Jaspersoft... 🚀")}
+          />
+
         </div>
-      </header> 
+      </header>
       {/* --- FIN HEADER --- */}
 
       {/* --- TABLA --- */}
       <div className="tabla-wrapper">
         {loading ? (
-            // Mientras loading sea true, mostramos:
-            <div className="loading-container">
-              <p>Cargando reportes... </p>
-            </div>
+            <div className="loading-container"><p>Cargando datos...</p></div>
         ) : (
-        <table className="tabla-reportes">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Materia</th>
-              <th>Mentor</th>
-              <th>Carrera</th>
-              <th>Tema</th>
-              <th>Hora</th>
-            </tr>
-          </thead>
-          <tbody>
-          {mentorias.length > 0 ? (
-              mentorias.map((fila) => (
-                  <tr key={fila.id}>
-                    <td>{fila.fecha}</td>
-                    <td>{fila.materia?.nombre || "Sin materia"}</td>
-                    {/* Accedemos al objeto mentor -> nombre y apellidos */}
-                    <td>{`${fila.mentor?.nombre || ''} ${fila.mentor?.apellidos || ''}`}</td>
-                    {/* Accedemos al mentor -> su carrera -> el nombre de la carrera */}
-                    <td>{fila.mentor?.carrera?.nombre || "N/A"}</td>
-                    {/* Mapeamos la lista de temas para mostrarlos todos separados por coma */}
-                    <td>
-                      {fila.temas && fila.temas.length > 0
-                          ? fila.temas.map(t => t.nombre).join(", ")
-                          : "General"}
-                    </td>
-                    <td>{`${fila.horaInicio} - ${fila.horaFin}`}</td>
-                  </tr>
-              ))
-          ) : (
-              <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                  No hay mentorías registradas en la base de datos.
-                </td>
-              </tr>
-          )}
-          </tbody>
-        </table>
-            )}
+            <ReportTable columns={columnas} data={mentoriasFiltradas} />
+        )}
       </div>
     </div>
   );
