@@ -14,6 +14,9 @@ import ActionButtons from "../Common/ActionButtons";
 
 import Input from "../Common/Input";
 import Button from "../Common/Button";
+import { enviarDatos } from "../../utils/api";
+
+import { useEffect } from 'react';
 
 const VistaCarreras = () => {
 
@@ -49,18 +52,48 @@ const VistaCarreras = () => {
     setShowModal(true);
   };
 
+
+  // Recarga de información en tabla
+  const [carreras, setcarreras] = useState([]);
+
+
+  const cargarCarreras = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/carreras');
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setcarreras(data);
+    }catch (error) {
+      console.error('Error al cargar carreras:', error);
+    }
+  };
+
+  useEffect(() => {
+    cargarCarreras();
+  }, []);
+
   // SUBMIT
-  const onSubmit = (data) => {
-    data.nombre = data.nombre.trim();
+ const onSubmit = async (data) => {
+    try {
+      data.nombre = data.nombre.trim();
 
-    alertaExito(
-        isEditing
-            ? "Carrera actualizada correctamente"
-            : "Carrera guardada correctamente"
-    );
+      // Enviamos a la ruta de backend 
+      await enviarDatos('/api/carreras', data);
 
-    reset();
-    setShowModal(false);
+      alertaExito("Carrera guardada en la base de datos");
+      console.log("Respuesta del servidor:", data);
+
+      cargarCarreras();
+      reset();
+      setShowModal(false);
+    } catch (error) {
+      alertaError("No se pudo conectar con el servidor");
+      console.error("Error al guardar:", error);
+    }
   };
 
   //VALIDACIONES
@@ -75,11 +108,7 @@ const VistaCarreras = () => {
     alertaCamposVacios();
   };
 
-  // DATOS
-  const carreras = [
-    { nombre: 'Desarrollo de software' },
-    { nombre: 'Redes y ciberseguridad' }
-  ];
+  
 
   return (
       <div className="carreras-container">
