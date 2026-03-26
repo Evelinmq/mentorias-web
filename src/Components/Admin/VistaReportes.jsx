@@ -1,35 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './VistaReportes.css';
-import DownloadIcon from '../../assets/DownloadIcon.png'
-
-
-const datosReporte = [
-  {
-    fecha: '30/01/2026',
-    materia: 'Programacion',
-    alumno: 'DPR Ian',
-    carrera: 'Desarrollo de software',
-    tema: 'Java',
-    hora: '13:00 - 14:00'
-  },
-  {
-    fecha: '30/01/2026',
-    materia: 'Programacion',
-    alumno: 'Jackson Wang',
-    carrera: 'Desarrollo de software',
-    tema: 'Java',
-    hora: '13:00 - 14:00'
-  }
-];
+import DownloadIcon from '../../assets/DownloadIcon.png';
+import { obtenerDatos } from "../../utils/api";
 
 const VistaReportes = () => {
-// Estados de los buscadores
+
+  // --- ESTADOS PARA DATOS ---
+  const [mentorias, setMentorias] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // --- ESTADOS DE UI (BUSCADORES) ---
   const [mostrarBuscadorMentor, setMostrarBuscadorMentor] = useState(false);
   const [mostrarBuscadorMateria, setMostrarBuscadorMateria] = useState(false);
 
-  // Estados para los valores de los inputs
+  // --- ESTADOS PARA FILTROS ---
   const [filtroMentor, setFiltroMentor] = useState('');
   const [filtroMateria, setFiltroMateria] = useState('');
+
+  // --- FUNCIÓN PARA CARGAR TODO ---
+  const cargarTodasLasMentorias = async () => {
+    try {
+      setLoading(true); // 1. Empezamos a cargar
+      const data = await obtenerDatos('/api/mentorias');
+      setMentorias(data);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false); // 2. Pase lo que pase, dejamos de cargar
+    }
+  };
+
+  useEffect(() => {
+    cargarTodasLasMentorias();
+  }, []);
 
   return (
     <div className="reportes-container">
@@ -91,7 +94,7 @@ const VistaReportes = () => {
                 type="text"
                 placeholder="Fecha inicio"
                 className="input-fecha"
-                onFocus={(e) => (e.target.type = "date")} // Se vuelve calendario
+                onFocus={(e) => (e.target.type = "date")}
                 onBlur={(e) => {
                 if (!e.target.value) e.target.type = "text";
                 }}
@@ -121,30 +124,52 @@ const VistaReportes = () => {
 
       {/* --- TABLA --- */}
       <div className="tabla-wrapper">
+        {loading ? (
+            // Mientras loading sea true, mostramos:
+            <div className="loading-container">
+              <p>Cargando reportes... </p>
+            </div>
+        ) : (
         <table className="tabla-reportes">
           <thead>
             <tr>
               <th>Fecha</th>
               <th>Materia</th>
-              <th>Alumno</th>
+              <th>Mentor</th>
               <th>Carrera</th>
               <th>Tema</th>
               <th>Hora</th>
             </tr>
           </thead>
           <tbody>
-            {datosReporte.map((fila, index) => (
-              <tr key={index}>
-                <td>{fila.fecha}</td>
-                <td>{fila.materia}</td>
-                <td>{fila.alumno}</td>
-                <td>{fila.carrera}</td>
-                <td>{fila.tema}</td>
-                <td>{fila.hora}</td>
+          {mentorias.length > 0 ? (
+              mentorias.map((fila) => (
+                  <tr key={fila.id}>
+                    <td>{fila.fecha}</td>
+                    <td>{fila.materia?.nombre || "Sin materia"}</td>
+                    {/* Accedemos al objeto mentor -> nombre y apellidos */}
+                    <td>{`${fila.mentor?.nombre || ''} ${fila.mentor?.apellidos || ''}`}</td>
+                    {/* Accedemos al mentor -> su carrera -> el nombre de la carrera */}
+                    <td>{fila.mentor?.carrera?.nombre || "N/A"}</td>
+                    {/* Mapeamos la lista de temas para mostrarlos todos separados por coma */}
+                    <td>
+                      {fila.temas && fila.temas.length > 0
+                          ? fila.temas.map(t => t.nombre).join(", ")
+                          : "General"}
+                    </td>
+                    <td>{`${fila.horaInicio} - ${fila.horaFin}`}</td>
+                  </tr>
+              ))
+          ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                  No hay mentorías registradas en la base de datos.
+                </td>
               </tr>
-            ))}
+          )}
           </tbody>
         </table>
+            )}
       </div>
     </div>
   );

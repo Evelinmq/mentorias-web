@@ -203,3 +203,10 @@
 .tabla-reportes tbody tr:hover {
   background-color: #f9fafb;
 }
+
+.loading-container {
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: #666;
+}
