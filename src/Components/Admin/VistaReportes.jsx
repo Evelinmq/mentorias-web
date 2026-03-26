@@ -125,7 +125,7 @@ const VistaReportes = () => {
 
         <div className="header-right">
 
-          // Buscador de mentores
+          {/* BUSADOR DE MENTOR*/}
           {mostrarBuscadorMentor && (
               <SearchBar
                   placeholder="Buscar mentor"
@@ -134,7 +134,7 @@ const VistaReportes = () => {
               />
           )}
 
-          // Buscador de materias
+          {/* BUSADOR DE MATERIAS*/}
           {mostrarBuscadorMateria && (
               <SearchBar
                   placeholder="Buscar materia"
