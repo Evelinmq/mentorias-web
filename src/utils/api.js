@@ -1,12 +1,12 @@
-
-const BASE_URL = 'http://localhost:8080'; 
+const BASE_URL = 'http://localhost:8080';
 
 export const enviarDatos = async (endpoint, data) => {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include'
         });
         if (!response.ok) throw new Error('Error al enviar los datos');
         return await response.json();
@@ -20,6 +20,7 @@ export const eliminarDatos = async (endpoint) => {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
             method: 'DELETE',
+            credentials: 'include'
         });
         if (!response.ok) throw new Error('No se pudo eliminar el registro');
         return response.status === 204 ? null : await response.json();
@@ -29,14 +30,14 @@ export const eliminarDatos = async (endpoint) => {
     }
 };
 
-
 export const obtenerDatos = async (endpoint) => {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -53,11 +54,12 @@ export const obtenerDatos = async (endpoint) => {
 export const actualizarDatos = async (endpoint, data) => {
     try {
         const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'PUT', 
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include'
         });
 
         if (!response.ok) {
