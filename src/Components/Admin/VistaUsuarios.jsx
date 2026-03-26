@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import './VistaUsuarios.css';
 import './ModalesGlobal.css';
@@ -8,6 +8,13 @@ import {
     alertaError,
     alertaCamposVacios
 } from "../../utils/alerts";
+
+import {
+    obtenerDatos,
+    enviarDatos,
+    actualizarDatos,
+    eliminarDatos
+} from "../../utils/api";
 
 import Table from "../Common/Table";
 import ActionButtons from "../Common/ActionButtons";
@@ -21,6 +28,7 @@ const VistaUsuarios = () => {
     const [verPendientes, setVerPendientes] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [usuarios, setUsuarios] = useState([]);
 
     const {
         register,
@@ -29,7 +37,6 @@ const VistaUsuarios = () => {
         formState: { errors }
     } = useForm();
 
-    // --- CONFIGURACIÓN DE COLUMNAS PARA EL NUEVO COMPONENTE TABLE ---
     const columnas = useMemo(() => [
         { header: 'Nombre(s)', accessor: 'nombres' },
         { header: 'Apellidos', accessor: 'apellidos' },
@@ -38,9 +45,37 @@ const VistaUsuarios = () => {
         { header: 'Rol', accessor: 'rol' }
     ], []);
 
+    useEffect(() => {
+        cargarUsuarios();
+    }, []);
+
+    const cargarUsuarios = async () => {
+        try {
+            const data = await obtenerDatos('/api/usuarios');
+
+            setUsuarios(
+                data.map(u => ({
+                    id: u.id,
+                    nombres: u.nombre,
+                    apellidos: u.apellidos,
+                    correo: u.correo,
+                    carrera: u.carrera?.nombre || "",
+                    carreraId: u.carrera?.id || "",
+                    rol: u.rol?.nombre || "",
+                    estado: u.estado
+                }))
+            );
+
+        } catch (error) {
+            console.error(error);
+            alertaError("Error al cargar usuarios");
+        }
+    };
+
     const handleAgregar = () => {
         setIsEditing(false);
         reset({
+            id: null,
             nombres: '',
             apellidos: '',
             carrera: '',
@@ -55,71 +90,106 @@ const VistaUsuarios = () => {
         setIsEditing(true);
 
         reset({
+            id: user.id,
             nombres: user.nombres,
             apellidos: user.apellidos,
-            carrera: user.carrera || "",
-            correo: user.correo || "",
+            carrera: user.carreraId || "",
+            correo: user.correo,
             password: "",
-            rol: user.rol || ""
+            rol: user.rol
         });
 
         setShowModal(true);
     };
 
-    const onSubmit = (data) => {
-        alertaExito(isEditing ? "Usuario actualizado correctamente" : "Usuario guardado correctamente");
-        reset();
-        setShowModal(false);
-    };
+    const handleAceptar = async (user) => {
+        try {
+            const payload = {
+                nombre: user.nombres,
+                apellidos: user.apellidos,
+                correo: user.correo,
+                estado: {
+                    id: 1
+                }
+            };
 
-    const onError = () => {
-        if (errors.nombres) {
-            if (errors.nombres.type === "required") alertaCamposVacios();
-            else if (errors.nombres.type === "pattern") alertaError("El nombre solo debe contener letras");
-            else if (errors.nombres.type === "validate") alertaError("El nombre no debe tener espacios al inicio o final");
-            return;
-        }
-        if (errors.apellidos) {
-            if (errors.apellidos.type === "required") alertaCamposVacios();
-            else if (errors.apellidos.type === "pattern") alertaError("Los apellidos solo deben contener letras");
-            else if (errors.apellidos.type === "validate") alertaError("Los apellidos no deben tener espacios al inicio o final");
-            return;
-        }
-        if (errors.correo) {
-            if (errors.correo.type === "required") alertaCamposVacios();
-            else alertaError("El correo no es válido");
-            return;
-        }
-        if (errors.password) {
-            if (errors.password.type === "required") alertaError("La contraseña es obligatoria");
-            else alertaError("La contraseña debe tener al menos 6 caracteres");
-            return;
-        }
-        if (errors.carrera || errors.rol) {
-            alertaCamposVacios();
-            return;
+            await actualizarDatos(`/api/usuarios/${user.id}`, payload);
+
+            alertaExito("Usuario aceptado");
+            cargarUsuarios();
+        } catch (error) {
+            console.error(error);
+            alertaError("Error al aceptar");
         }
     };
 
-    const usuariosPrincipales = [
-        {
-            correo: '20243ds148@utez.edu.mx',
-            nombres: 'Andres Manuel',
-            apellidos: 'Lopez Obrador',
-            carrera: 'Desarrollo de Software',
-            rol: 'Mentor'
+    const handleRechazar = async (id) => {
+        try {
+            await eliminarDatos(`/api/usuarios/${id}`);
+            alertaExito("Usuario rechazado");
+            cargarUsuarios();
+        } catch (error) {
+            console.error(error);
+            alertaError("Error al rechazar");
         }
-    ];
+    };
 
-    const usuariosPendientes = [
-        {
-            correo: '20243ds144@utez.edu.mx',
-            nombres: 'Carlos',
-            apellidos: 'Perez Gomez',
-            carrera: 'Desarrollo de Software',
-            rol: 'Mentor'
+    const onSubmit = async (data) => {
+        try {
+            if (!data.carrera) {
+                alertaCamposVacios();
+                return;
+            }
+
+            const payload = {
+                nombre: data.nombres,
+                apellidos: data.apellidos,
+                correo: data.correo,
+                contrasena: data.password,
+                carrera: {
+                    id: Number(data.carrera)
+                }
+            };
+
+            console.log("PAYLOAD:", payload);
+
+            if (isEditing) {
+                await actualizarDatos(`/api/usuarios/${data.id}`, payload);
+                alertaExito("Usuario actualizado correctamente");
+            } else {
+                await enviarDatos('/api/usuarios', payload);
+                alertaExito("Usuario guardado correctamente");
+            }
+
+            await cargarUsuarios();
+            reset();
+            setShowModal(false);
+
+        } catch (error) {
+            console.error("ERROR BACK:", error);
+            alertaError("Error al guardar usuario");
         }
-    ];
+    };
+
+    const handleEstado = async (user) => {
+        try {
+            const payload = {
+                nombre: user.nombres,
+                apellidos: user.apellidos,
+                correo: user.correo,
+                estado: {
+                    id: user.estado?.id === 1 ? 2 : 1
+                }
+            };
+
+            await actualizarDatos(`/api/usuarios/${user.id}`, payload);
+
+            alertaExito("Estado actualizado");
+            cargarUsuarios();
+        } catch (error) {
+            alertaError("Error al cambiar estado");
+        }
+    };
 
     return (
         <div className="usuarios-container">
@@ -133,27 +203,27 @@ const VistaUsuarios = () => {
                             onClick={() => setVerPendientes(!verPendientes)}
                         />
                     </div>
-
-                    <div className="header-right">
-                        <select className="select-filtro-usuario">
-                            <option value="">Filtrar por usuario</option>
-                            {(verPendientes ? usuariosPendientes : usuariosPrincipales).map(u => (
-                                <option key={u.correo}>
-                                    {u.nombres} {u.apellidos}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
                 </header>
 
-                {/* Se agregaron las columnas para que la tabla pueda iterar sobre la data */}
                 <Table
                     columns={columnas}
-                    data={verPendientes ? usuariosPendientes : usuariosPrincipales}
+                    data={usuarios}
                     renderActions={(user) =>
                         verPendientes
-                            ? <PendingActions user={user} />
-                            : <ActionButtons user={user} onEdit={handleEditar} />
+                            ? (
+                                <PendingActions
+                                    user={user}
+                                    onAccept={handleAceptar}
+                                    onReject={(user) => handleRechazar(user.id)}
+                                />
+                            )
+                            : (
+                                <ActionButtons
+                                    onEdit={() => handleEditar(user)}
+                                    onDelete={() => handleEliminar(user.id)}
+                                    onBlock={() => handleEstado(user)}
+                                />
+                            )
                     }
                 />
             </div>
@@ -164,65 +234,47 @@ const VistaUsuarios = () => {
                         <h2 className='modal-title'>
                             {isEditing ? "Editar usuario" : "Agregar usuario"}
                         </h2>
-                        <form className='modal-form' onSubmit={handleSubmit(onSubmit, onError)}>
+
+                        <form className='modal-form' onSubmit={handleSubmit(onSubmit)}>
+                            <input type="hidden" {...register("id")} />
+
                             <div className='modal-grid'>
                                 <div className='modal-column'>
-                                    <Input
-                                        placeholder="Nombre(s)"
-                                        register={register}
-                                        name="nombres"
-                                        rules={{
-                                            required: true,
-                                            pattern: /^[A-Za-zÁÉÍÓÚñÑ\s]+$/,
-                                            validate: v => v.trim() === v
-                                        }}
-                                    />
-                                    <Input
-                                        placeholder="Apellidos"
-                                        register={register}
-                                        name="apellidos"
-                                        rules={{
-                                            required: true,
-                                            pattern: /^[A-Za-zÁÉÍÓÚñÑ\s]+$/,
-                                            validate: v => v.trim() === v
-                                        }}
-                                    />
-                                    <Select
-                                        register={register}
-                                        name="carrera"
-                                        rules={{ required: true }}
-                                        options={["Desarrollo de Software", "Diseño de modas"]}
-                                    />
+                                    <Input placeholder="Nombre(s)" register={register} name="nombres" rules={{ required: true }} />
+                                    <Input placeholder="Apellidos" register={register} name="apellidos" rules={{ required: true }} />
+                                    <div className="select-row">
+                                        <Select
+                                            register={register}
+                                            name="carrera"
+                                            rules={{ required: true }}
+                                            options={[
+                                                { value: 1, label: "Desarrollo de Software" },
+                                                { value: 2, label: "Diseño de modas" }
+                                            ]}
+                                        />
+                                        
+                                    </div>
+                                    <div className="select-row">
+
+                                        <Select
+                                            register={register}
+                                            name="rol"
+                                            rules={{ required: true }}
+                                            options={[
+                                                { value: "Mentor", label: "Mentor" },
+                                                { value: "Alumno", label: "Alumno" },
+                                                { value: "Administrador", label: "Administrador" }
+                                            ]}
+                                        />
+                                    </div>
                                 </div>
+
                                 <div className='modal-column'>
-                                    <Input
-                                        type="email"
-                                        placeholder="Correo"
-                                        register={register}
-                                        name="correo"
-                                        rules={{
-                                            required: true,
-                                            pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                                        }}
-                                    />
-                                    <Input
-                                        type="password"
-                                        placeholder="Contraseña"
-                                        register={register}
-                                        name="password"
-                                        rules={{
-                                            required: true,
-                                            minLength: 6
-                                        }}
-                                    />
-                                    <Select
-                                        register={register}
-                                        name="rol"
-                                        rules={{ required: true }}
-                                        options={["Mentor", "Alumno", "Administrador"]}
-                                    />
+                                    <Input type="email" placeholder="Correo" register={register} name="correo" rules={{ required: true }} />
+                                    <Input type="password" placeholder="Contraseña" register={register} name="password" rules={{ required: true }} />
                                 </div>
                             </div>
+
                             <div className='modal-actions'>
                                 <Button text="Cancelar" className="btn-cancelar" onClick={() => setShowModal(false)} />
                                 <Button text={isEditing ? "Actualizar" : "Guardar"} type="submit" className="btn-guardar" />

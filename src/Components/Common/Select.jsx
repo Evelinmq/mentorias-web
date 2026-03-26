@@ -1,16 +1,20 @@
 import React from "react";
 
-const Select = ({ register, name, rules, options }) => {
-  return (
-    <select className="modal-select" {...register(name, rules)}>
-      <option value="">Selecciona una opción</option>
-      {options.map((opt, index) => (
-        <option key={index} value={opt}>
-          {opt}
-        </option>
-      ))}
-    </select>
-  );
+const Select = ({ register, name, options, rules }) => {
+    return (
+        <select
+            {...register(name, rules)}
+            className="modal-input" 
+        >
+            <option value="">Selecciona</option>
+
+            {options.map((opt, index) => (
+                <option key={index} value={opt.value}>
+                    {opt.label}
+                </option>
+            ))}
+        </select>
+    );
 };
 
 export default Select;

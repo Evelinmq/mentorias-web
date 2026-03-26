@@ -135,3 +135,18 @@
   padding: 20px;
   border-radius: 12px;
 }
+
+.select-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.select-row > * {
+    width: 50%;
+}
+
+.select-row select {
+    width: 100%;
+    box-sizing: border-box;
+}
