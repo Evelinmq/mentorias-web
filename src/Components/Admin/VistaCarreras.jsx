@@ -14,7 +14,7 @@ import ActionButtons from "../Common/ActionButtons";
 
 import Input from "../Common/Input";
 import Button from "../Common/Button";
-import { enviarDatos } from "../../utils/api";
+import { enviarDatos, obtenerDatos, actualizarDatos } from "../../utils/api";
 
 import { useEffect } from 'react';
 
@@ -22,6 +22,9 @@ const VistaCarreras = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
+
 
   const {
     register,
@@ -42,9 +45,9 @@ const VistaCarreras = () => {
   };
 
   // EDITAR
-  const handleEditar = (carrera) => {
+ const handleEditar = (carrera) => {
     setIsEditing(true);
-
+    setCarreraSeleccionada(carrera); 
     reset({
       nombre: carrera.nombre || ''
     });
@@ -59,14 +62,8 @@ const VistaCarreras = () => {
 
   const cargarCarreras = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/carreras');
-
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-    }
-
-    const data = await response.json();
-    setcarreras(data);
+      const data = await obtenerDatos('/api/carreras');
+      setcarreras(data);
     }catch (error) {
       console.error('Error al cargar carreras:', error);
     }
@@ -77,22 +74,26 @@ const VistaCarreras = () => {
   }, []);
 
   // SUBMIT PARA AGREGAR Y ENVIAR A BACKEND
- const onSubmit = async (data) => {
+const onSubmit = async (data) => {
     try {
       data.nombre = data.nombre.trim();
 
-      // Enviamos a la ruta de backend 
-      await enviarDatos('/api/carreras', data);
-
-      alertaExito("Carrera guardada en la base de datos");
-      console.log("Respuesta del servidor:", data);
+      if (isEditing && carreraSeleccionada) {
+       //Editar
+       await actualizarDatos(`/api/carreras/${carreraSeleccionada.id}`, data);
+        alertaExito("Carrera actualizada correctamente");
+      } else {
+        // Envio de datos)
+        await enviarDatos('/api/carreras', data);
+        alertaExito("Carrera guardada en la base de datos");
+      }
 
       cargarCarreras();
       reset();
       setShowModal(false);
     } catch (error) {
-      alertaError("No se pudo conectar con el servidor");
-      console.error("Error al guardar:", error);
+      alertaError("Error al procesar la solicitud");
+      console.error("Error:", error);
     }
   };
 
@@ -199,5 +200,6 @@ const VistaCarreras = () => {
       </div>
   );
 };
+
 
 export default VistaCarreras;

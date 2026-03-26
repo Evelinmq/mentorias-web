@@ -17,7 +17,7 @@ import Input from "../Common/Input";
 import Select from "../Common/Select";
 import Button from "../Common/Button";
 
-import { enviarDatos } from "../../utils/api";
+import { enviarDatos, eliminarDatos } from "../../utils/api";
 
 import { useEffect } from 'react';
 
@@ -60,11 +60,18 @@ const VistaMaterias = () => {
   };
 
   // eLIMINAR
-  const eliminarMateria = async () => {
+  const eliminarMateria = async (id) => {
     const confirmar = await confirmarEliminar("¿Eliminar materia?");
 
     if (confirmar) {
-      alertaExito("Materia eliminada correctamente");
+      try {
+        await eliminarDatos(`/api/materias/${id}`);
+        alertaExito("Materia eliminada correctamente");
+        cargarMaterias();
+      } catch (error) {
+        alertaError("No se pudo eliminar la materia");
+        console.error("Error al eliminar:", error);
+      }
     }
   };
 
@@ -162,7 +169,7 @@ const VistaMaterias = () => {
               renderActions={(materia) => (
                   <ActionButtons
                       onEdit={() => handleEditar(materia)}
-                      onDelete={eliminarMateria}
+                      onDelete={() => eliminarMateria(materia.id)}
                       showBlock={false}
                   />
               )}

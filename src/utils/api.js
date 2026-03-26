@@ -28,3 +28,45 @@ export const eliminarDatos = async (endpoint) => {
         throw error;
     }
 };
+
+
+export const obtenerDatos = async (endpoint) => {
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener datos de ${endpoint}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error en GET:', error);
+        throw error;
+    }
+};
+
+export const actualizarDatos = async (endpoint, data) => {
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, {
+            method: 'PUT', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al actualizar datos en ${endpoint}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error en PUT:', error);
+        throw error;
+    }
+};
