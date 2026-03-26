@@ -1,6 +1,8 @@
 import { useState } from "react";
 import MentoriaCard from "../Common/MentoriaCard";
 import "./VistaSolicitar.css";
+import Swal from 'sweetalert2';
+
 
 const MENTORES = [
     {
@@ -56,30 +58,62 @@ const IconFiltro = () => (
 // Input + botón de tema por tarjeta
 function TemaInput({ onConfirmar }) {
     const [tema, setTema] = useState("");
+    const [error, setError] = useState("");
+
+    const handleChange = (e) => {
+        // Evitamos espacios al inicio
+        const value = e.target.value.trimStart();
+        setTema(value);
+
+        // Lógica de validación en tiempo real
+        if (value.length > 0 && value.length < 5) {
+            setError("El tema debe tener al menos 5 caracteres.");
+        } else if (value.length > 50) {
+            setError("El tema es muy largo (máx. 50 caracteres).");
+        } else {
+            setError(""); // Si todo está bien, limpiamos el error
+        }
+    };
+
+    // Evaluamos si el formulario es válido para habilitar los botones
+    const isValid = tema.trim().length >= 5 && tema.trim().length <= 50;
 
     return (
         <>
             <div className="solicitud-tema-row">
                 <input
-                    className="solicitud-tema-input"
+                    // Le agregamos una clase dinámica si hay error para pintar el borde rojo (opcional en tu CSS)
+                    className={`solicitud-tema-input ${error ? "input-error" : ""}`}
                     type="text"
-                    placeholder="Proponer tema"
+                    placeholder="Proponer tema (ej. Derivadas)"
                     value={tema}
-                    onChange={(e) => setTema(e.target.value.trimStart())}
+                    onChange={handleChange}
+                    maxLength={55} // Previene que sigan escribiendo infinitamente
                 />
                 <button
                     className="solicitud-tema-add"
-                    disabled={!tema.trim()}
+                    disabled={!isValid}
                     onClick={() => onConfirmar(tema)}
                     type="button"
                 >
                     +
                 </button>
             </div>
+
+            {/* Mensaje de error visual (puedes ajustar los estilos en tu CSS) */}
+            {error && (
+                <span style={{ color: "#d9534f", fontSize: "0.75rem", display: "block", marginBottom: "8px", marginTop: "-4px" }}>
+                    {error}
+                </span>
+            )}
+
             <button
-                className={`confirmar-btn ${tema.trim() ? "active" : ""}`}
-                disabled={!tema.trim()}
-                onClick={() => onConfirmar(tema)}
+                className={`confirmar-btn ${isValid ? "active" : ""}`}
+                disabled={!isValid}
+                onClick={() => {
+                    onConfirmar(tema);
+                    setTema(""); // Limpia el input después de confirmar
+                }}
                 type="button"
             >
                 Confirmar
@@ -134,9 +168,47 @@ export default function VistaSolicitar() {
         ? MENTORES.filter((m) => m.materia === filtro)
         : MENTORES;
 
-    const handleConfirmar = (mentor, tema) => {
-        // Aquí irá tu llamada a la API
-        alert(`Solicitud enviada a ${mentor.nombre} — Tema: ${tema}`);
+const handleConfirmar = async (mentor, tema) => {
+        // Mostramos una alerta de confirmación ANTES de agendar
+        const confirmacion = await Swal.fire({
+            title: '¿Confirmar mentoría?',
+            html: `Estás a punto de solicitar una mentoría con <b>${mentor.nombre}</b><br/>Tema: <i>"${tema}"</i>`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6', // Puedes cambiarlo por el azul de tu proyecto
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, solicitar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (confirmacion.isConfirmed) {
+            try {
+                // Aquí irá tu llamada real a la API (tu función enviarDatos de api.js)
+                // await enviarDatos('/api/mentorias/solicitar', { mentorId: mentor.id, tema: tema });
+
+                // Simulamos una carga de medio segundo
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Alerta de éxito
+                Swal.fire({
+                    title: '¡Solicitud enviada!',
+                    text: `Tu mentoría sobre "${tema}" ha sido agendada con éxito.`,
+                    icon: 'success',
+                    confirmButtonText: 'Entendido'
+                });
+
+                // (Opcional) Aquí podrías actualizar el estado para descontar los cupos
+
+            } catch (error) {
+                // Alerta de error si falla la API
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo enviar la solicitud. Intenta de nuevo más tarde.',
+                    icon: 'error',
+                    confirmButtonText: 'Cerrar'
+                });
+            }
+        }
     };
 
     return (
