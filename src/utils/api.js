@@ -15,3 +15,16 @@ export const enviarDatos = async (endpoint, data) => {
         throw error;
     }
 };
+
+export const eliminarDatos = async (endpoint) => {
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) throw new Error('No se pudo eliminar el registro');
+        return response.status === 204 ? null : await response.json();
+    } catch (error) {
+        console.error('Error al eliminar:', error);
+        throw error;
+    }
+};

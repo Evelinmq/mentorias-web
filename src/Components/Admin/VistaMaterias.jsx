@@ -17,6 +17,10 @@ import Input from "../Common/Input";
 import Select from "../Common/Select";
 import Button from "../Common/Button";
 
+import { enviarDatos } from "../../utils/api";
+
+import { useEffect } from 'react';
+
 const VistaMaterias = () => {
 
   const [showModal, setShowModal] = useState(false);
@@ -64,13 +68,49 @@ const VistaMaterias = () => {
     }
   };
 
-  // SUBMIT
-  const onSubmit = (data) => {
-    alertaExito(isEditing ? "Materia actualizada correctamente" : "Materia guardada correctamente");
+// Recarga de información en tabla
+  const [materias, setMaterias] = useState([]);
 
-    reset();
-    setShowModal(false);
+
+  const cargarMaterias = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/materias');
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setMaterias(data);
+    }catch (error) {
+      console.error('Error al cargar materias:', error);
+    }
   };
+
+  useEffect(() => {
+    cargarMaterias();
+  }, []);
+
+
+  // SUBMIT
+ const onSubmit = async (data) => {
+     try {
+       data.nombre = data.nombre.trim();
+ 
+       // Enviamos a la ruta de backend 
+       await enviarDatos('/api/materias', data);
+ 
+       alertaExito("Materia guardada en la base de datos");
+       console.log("Respuesta del servidor:", data);
+ 
+       cargarMaterias();
+       reset();
+       setShowModal(false);
+     } catch (error) {
+       alertaError("No se pudo conectar con el servidor");
+       console.error("Error al guardar:", error);
+     }
+   };
 
   // ERRORES
   const onError = () => {
@@ -93,11 +133,7 @@ const VistaMaterias = () => {
     alertaCamposVacios();
   };
 
-  //DATOS
-  const materias = [
-    { nombre: 'Programacion', carrera: 'Desarrollo de software', cuatrimestre: '7' },
-    { nombre: 'Redes', carrera: 'Desarrollo de software', cuatrimestre: '1' }
-  ];
+
 
   return (
       <div className="materias-container">
