@@ -76,7 +76,7 @@ const VistaCarreras = () => {
     cargarCarreras();
   }, []);
 
-  // SUBMIT
+  // SUBMIT PARA AGREGAR Y ENVIAR A BACKEND
  const onSubmit = async (data) => {
     try {
       data.nombre = data.nombre.trim();
