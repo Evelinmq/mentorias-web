@@ -42,6 +42,14 @@ export const alertaError = (mensaje = "Ocurrió un error") => {
   });
 };
 
+export const alertaSinCambios = () => {
+  return swalBase.fire({
+    icon: "info",
+    title: "Sin cambios",
+    text: "No modificaste ningún dato del usuario."
+  });
+};
+
 export const confirmarEliminar = async () => {
 
   const resultado = await swalBase.fire({

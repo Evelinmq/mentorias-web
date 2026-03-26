@@ -6,7 +6,11 @@ import './ModalesGlobal.css';
 import {
     alertaExito,
     alertaError,
-    alertaCamposVacios
+    alertaCamposVacios,
+    confirmarEliminar,
+    confirmarRechazarSolicitud,
+    confirmarDesactivarUsuario,
+    alertaSinCambios,
 } from "../../utils/alerts";
 
 import {
@@ -34,7 +38,7 @@ const VistaUsuarios = () => {
         register,
         handleSubmit,
         reset,
-        formState: { errors }
+        formState: { errors, isDirty }
     } = useForm();
 
     const columnas = useMemo(() => [
@@ -124,13 +128,32 @@ const VistaUsuarios = () => {
     };
 
     const handleRechazar = async (id) => {
-        try {
-            await eliminarDatos(`/api/usuarios/${id}`);
-            alertaExito("Usuario rechazado");
-            cargarUsuarios();
-        } catch (error) {
-            console.error(error);
-            alertaError("Error al rechazar");
+        const confirmado = await confirmarRechazarSolicitud();
+
+        if (confirmado) {
+            try {
+                await eliminarDatos(`/api/usuarios/${id}`);
+                alertaExito("Usuario rechazado");
+                cargarUsuarios();
+            } catch (error) {
+                console.error(error);
+                alertaError("Error al rechazar la solicitud");
+            }
+        }
+    };
+
+    const handleEliminar = async (id) => {
+        const confirmado = await confirmarEliminar();
+
+        if (confirmado) {
+            try {
+                await eliminarDatos(`/api/usuarios/${id}`);
+                alertaExito("Usuario eliminado correctamente");
+                cargarUsuarios(); // Recargamos la tabla
+            } catch (error) {
+                console.error("Error al eliminar:", error);
+                alertaError("Error al intentar eliminar el usuario");
+            }
         }
     };
 
@@ -140,16 +163,24 @@ const VistaUsuarios = () => {
                 alertaCamposVacios();
                 return;
             }
+            if (isEditing && !isDirty) {
+                alertaSinCambios();
+                return;
+            }
 
             const payload = {
                 nombre: data.nombres,
                 apellidos: data.apellidos,
                 correo: data.correo,
-                contrasena: data.password,
                 carrera: {
                     id: Number(data.carrera)
                 }
             };
+
+            // NUEVO: Solo incluimos la contraseña si escribieron algo
+            if (data.password && data.password.trim() !== "") {
+                payload.contrasena = data.password;
+            }
 
             console.log("PAYLOAD:", payload);
 
@@ -172,23 +203,40 @@ const VistaUsuarios = () => {
     };
 
     const handleEstado = async (user) => {
+        const estaActivo = user.estado?.id === 1;
+
+        if (estaActivo) {
+            const confirmado = await confirmarDesactivarUsuario();
+
+            if (!confirmado) {
+                return;
+            }
+        }
+
         try {
             const payload = {
                 nombre: user.nombres,
                 apellidos: user.apellidos,
                 correo: user.correo,
                 estado: {
-                    id: user.estado?.id === 1 ? 2 : 1
+                    id: estaActivo ? 2 : 1
                 }
             };
 
             await actualizarDatos(`/api/usuarios/${user.id}`, payload);
 
-            alertaExito("Estado actualizado");
+            alertaExito(estaActivo ? "Usuario desactivado" : "Usuario activado nuevamente");
+
             cargarUsuarios();
         } catch (error) {
-            alertaError("Error al cambiar estado");
+            console.error("Error al cambiar estado:", error);
+            alertaError("Error al cambiar el estado del usuario");
         }
+    };
+
+    // NUEVO: Función que reacciona si react-hook-form detecta campos vacíos
+    const onErroresValidacion = () => {
+        alertaCamposVacios();
     };
 
     return (
@@ -235,7 +283,8 @@ const VistaUsuarios = () => {
                             {isEditing ? "Editar usuario" : "Agregar usuario"}
                         </h2>
 
-                        <form className='modal-form' onSubmit={handleSubmit(onSubmit)}>
+                        {/* NUEVO: Pasamos onErroresValidacion como segundo parámetro */}
+                        <form className='modal-form' onSubmit={handleSubmit(onSubmit, onErroresValidacion)} noValidate>
                             <input type="hidden" {...register("id")} />
 
                             <div className='modal-grid'>
@@ -252,7 +301,7 @@ const VistaUsuarios = () => {
                                                 { value: 2, label: "Diseño de modas" }
                                             ]}
                                         />
-                                        
+
                                     </div>
                                     <div className="select-row">
 
@@ -271,7 +320,15 @@ const VistaUsuarios = () => {
 
                                 <div className='modal-column'>
                                     <Input type="email" placeholder="Correo" register={register} name="correo" rules={{ required: true }} />
-                                    <Input type="password" placeholder="Contraseña" register={register} name="password" rules={{ required: true }} />
+
+                                    {/* NUEVO: La contraseña ya no es requerida obligatoriamente si estamos editando */}
+                                    <Input
+                                        type="password"
+                                        placeholder={isEditing ? "Nueva contraseña (opcional)" : "Contraseña"}
+                                        register={register}
+                                        name="password"
+                                        rules={{ required: !isEditing }}
+                                    />
                                 </div>
                             </div>
 
