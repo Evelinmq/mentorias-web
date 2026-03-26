@@ -17,7 +17,7 @@ import Input from "../Common/Input";
 import Select from "../Common/Select";
 import Button from "../Common/Button";
 
-import { enviarDatos, eliminarDatos } from "../../utils/api";
+import { enviarDatos, eliminarDatos, obtenerDatos, actualizarDatos  } from "../../utils/api";
 
 import { useEffect } from 'react';
 
@@ -25,6 +25,8 @@ const VistaMaterias = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+   const [materiaSeleccionada, setMateriaSeleccionada] = useState(null);
 
   const {
     register,
@@ -47,9 +49,9 @@ const VistaMaterias = () => {
   };
 
   //EDITAR
-  const handleEditar = (materia) => {
+   const handleEditar = (materia) => {
     setIsEditing(true);
-
+    setMateriaSeleccionada(materia);
     reset({
       nombre: materia.nombre || '',
       cuatrimestre: materia.cuatrimestre || '',
@@ -76,48 +78,46 @@ const VistaMaterias = () => {
   };
 
 // Recarga de información en tabla
-  const [materias, setMaterias] = useState([]);
-
-
-  const cargarMaterias = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/materias');
-
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-    }
-
-    const data = await response.json();
-    setMaterias(data);
-    }catch (error) {
-      console.error('Error al cargar materias:', error);
-    }
-  };
-
-  useEffect(() => {
-    cargarMaterias();
-  }, []);
+ const [materias, setMaterias] = useState([]);
+ 
+ 
+   const cargarMaterias = async () => {
+     try {
+       const data = await obtenerDatos('/api/materias');
+       setMaterias(data);
+     }catch (error) {
+       console.error('Error al cargar materias:', error);
+     }
+   };
+ 
+   useEffect(() => {
+     cargarMaterias();
+}, []);
 
 
   // SUBMIT
- const onSubmit = async (data) => {
-     try {
-       data.nombre = data.nombre.trim();
- 
-       // Enviamos a la ruta de backend 
-       await enviarDatos('/api/materias', data);
- 
-       alertaExito("Materia guardada en la base de datos");
-       console.log("Respuesta del servidor:", data);
- 
-       cargarMaterias();
-       reset();
-       setShowModal(false);
-     } catch (error) {
-       alertaError("No se pudo conectar con el servidor");
-       console.error("Error al guardar:", error);
-     }
-   };
+const onSubmit = async (data) => {
+    try {
+      data.nombre = data.nombre.trim();
+
+      if (isEditing && materiaSeleccionada) {
+       //Editar
+       await actualizarDatos(`/api/materias/${materiaSeleccionada.id}`, data);
+        alertaExito("Materia actualizada correctamente");
+      } else {
+        // Envio de datos)
+        await enviarDatos('/api/materias', data);
+        alertaExito("Materia guardada en la base de datos");
+      }
+
+      cargarMaterias();
+      reset();
+      setShowModal(false);
+    } catch (error) {
+      alertaError("Error al procesar la solicitud");
+      console.error("Error:", error);
+    }
+  };
 
   // ERRORES
   const onError = () => {
