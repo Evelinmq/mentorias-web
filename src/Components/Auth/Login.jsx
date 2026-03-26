@@ -13,7 +13,6 @@ function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Convertimos la función a asíncrona (async) para poder usar 'await' en la petición
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -27,7 +26,6 @@ function Login() {
       const response = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
-          // Spring Security espera los datos como si fuera un formulario HTML clásico
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
@@ -41,18 +39,21 @@ function Login() {
 
         // SE EXTRAE Y SE LEE EL JSON
         const data = await response.json();
+        console.log("Respuesta secreta del backend:", data);
 
-        // SE TOMAN LOS DATOS DEL BACK ENDDDDDDDD
         const correoUsuario = data.correo;
         const rolAsignado = data.rol;
 
         login(correoUsuario, rolAsignado);
 
-        if (rolAsignado === "admin") {
+        if (rolAsignado === "admin" || rolAsignado === "administrador" || rolAsignado === "role_admin") {
           navigate("/dashboard");
-        } else if (rolAsignado === "mentor") {
+        } else if (rolAsignado === "mentor" || rolAsignado === "role_mentor") {
           navigate("/mentor/dashboard");
-        } else if (rolAsignado === "aprendiz") {
+        } else if (rolAsignado === "aprendiz" || rolAsignado === "role_aprendiz") {
+          navigate("/aprendiz/dashboard");
+        } else {
+          alert("Iniciaste sesión, pero tu rol es desconocido: " + rolAsignado);
           navigate("/aprendiz/dashboard");
         }
 
