@@ -23,16 +23,15 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json", // Cambiado a JSON
         },
-        body: new URLSearchParams({
-          username: correo,
+        body: JSON.stringify({ // Enviar objeto JSON
+          correo: correo,      // Asegúrate que estos nombres coincidan con los de tu LoginDTO en Java
           password: password
-        }),
-        credentials: "include"
+        })
       });
 
       if (response.ok && !response.url.includes("error")) {
@@ -42,7 +41,7 @@ function Login() {
         console.log("Respuesta secreta del backend:", data);
 
         const correoUsuario = data.correo;
-        const rolAsignado = data.rol;
+        const rolAsignado = data.rol ? data.rol.toLowerCase() : "";
 
         login(correoUsuario, rolAsignado);
 
