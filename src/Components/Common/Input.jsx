@@ -8,3 +8,5 @@ const Input = ({ type = "text", placeholder, register, name, rules }) => {
     />
   );
 };
+
+export default Input;

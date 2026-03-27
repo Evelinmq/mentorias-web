@@ -2,7 +2,9 @@ import React from "react";
 import "./Registro.css";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
-import { alertaCamposCaracteres, alertaCamposVacios } from "../../utils/alerts";
+import { alertaCamposCaracteres, alertaCamposVacios, alertaExito } from "../../utils/alerts";
+import { enviarDatos } from "../../utils/api";
+import { alertaError } from "../../utils/alerts";
 
 function Registro() {
     const navigate = useNavigate();
@@ -63,7 +65,15 @@ function Registro() {
         }
 
         // Aquí iría la lógica para enviar los datos al backend o realizar alguna acción con ellos
-        console.log("Datos listos para enviar:", { ...formData, nombre: n, apellidoP: ap, apellidoM: am });
+        const onSubmit = async (data) => {
+            try {
+                await enviarDatos('/api/usuarios', data);
+                alertaExito("Usuario registrado correctamente");
+            } catch (error) {
+              alertaError("Error al procesar la solicitud");
+              console.error("Error:", error);
+            }
+          };
         alertaExito();
         navigate("/login");
     };
