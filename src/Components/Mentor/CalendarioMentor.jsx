@@ -13,13 +13,11 @@ function CalendarioMentor({ mentorias, onSeleccionarDia }) {
     const manejarCambio = (value) => {
         setFecha(value);
 
-        // Convertir a formato YYYY-MM-DD
         const fechaFormateada = value.toISOString().split("T")[0];
 
         onSeleccionarDia(fechaFormateada);
     };
 
-    // Para mostrar puntos en días con mentorías
     const tileContent = ({ date, view }) => {
         if (view === "month") {
 
@@ -32,13 +30,18 @@ function CalendarioMentor({ mentorias, onSeleccionarDia }) {
             return tieneMentorias ? <div className="punto"></div> : null;
         }
     };
+    
+    
 
     return (
+
         <Calendar
             onChange={manejarCambio}
             value={fecha}
             tileContent={tileContent}
+            minDate={new Date()} 
         />
+        
     );
 }
 
