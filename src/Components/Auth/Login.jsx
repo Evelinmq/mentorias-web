@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../AuthContext";
-import { alertaCamposVacios } from "../../utils/alerts";
+import { alertaCamposVacios, alertaError, alertaExito } from "../../utils/alerts";
 import logo from "../../assets/logo.png";
 import "./Login.css";
 
@@ -23,7 +23,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch("http://localhost:8080/api/usuarios/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Cambiado a JSON
@@ -34,16 +34,21 @@ function Login() {
         })
       });
 
-      if (response.ok && !response.url.includes("error")) {
 
-        // SE EXTRAE Y SE LEE EL JSON
-        const data = await response.json();
-        console.log("Respuesta secreta del backend:", data);
+      const data = await response.json();
+
+      if (response.ok) {
+
+        alertaExito("Inicio de sesión exitoso");
+
+        console.log("login exitoso:", data);
 
         const correoUsuario = data.correo;
         const rolAsignado = data.rol ? data.rol.toLowerCase() : "";
 
         login(correoUsuario, rolAsignado);
+
+    
 
         if (rolAsignado === "admin" || rolAsignado === "administrador" || rolAsignado === "role_admin") {
           navigate("/dashboard");
@@ -57,7 +62,7 @@ function Login() {
         }
 
       } else {
-        alert("Correo o contraseña incorrectos");
+       alertaError("Sigue en pendiente de aprobación o estan mal tu correo o contraseña");
       }
 
     } catch (error) {

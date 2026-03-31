@@ -93,13 +93,14 @@ function Registro() {
     cuatrimestre: formData.cuatrimestre,
     email: formData.email,
     password: formData.password,
-    rol: formData.rol == "Mentor" ? [1] : [2]  // Convertir a los roles para el backend
+    rol: formData.rol == "Mentor" ? [1] : [2],  // Convertir a los roles para el backend
     // si selecciona 1 es mentor pero si es 2 es aprendiz
+    estado_usuario: 3
 };
 
             try {
                 await enviarDatos('/api/usuarios', usuariosData);
-                alertaExito("Usuario registrado correctamente");
+                alertaExito("Usuario en espera de aprobación");
                 navigate("/login");
             } catch (error) {
               alertaError("Error al procesar la solicitud");
