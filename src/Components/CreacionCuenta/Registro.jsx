@@ -3,23 +3,39 @@ import "./Registro.css";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { alertaCamposCaracteres, alertaCamposVacios, alertaExito } from "../../utils/alerts";
-import { enviarDatos } from "../../utils/api";
+import { enviarDatos, obtenerDatos } from "../../utils/api";
 import { alertaError } from "../../utils/alerts";
+import { useEffect, useState } from "react";
 
 function Registro() {
     const navigate = useNavigate();
+   const [carreras, setCarreras] = useState([]);
+
+   //cargar carreras en el input
+    useEffect(() => {
+        const cargarCarreras = async () => {
+            try {
+                const data = await obtenerDatos('/api/carreras'); 
+                setCarreras(data);
+            } catch (error) {
+                console.error("Error al cargar carreras:", error);
+            }
+        };
+        cargarCarreras();
+    }, []);
+
 
     //Estado para los campos del formulario
     const [formData, setFormData] = React.useState({
         nombre: "",
-        ApellidoPaterno: "",
-        ApellidoMaterno: "",
+        apellidoPaterno: "",
+        apellidoMaterno: "",
         matricula: "",
         carrera: "",
         cuatrimestre: "",
-        correo: "",
+        email: "",
         password: "",
-        rol: ""
+        rol: []
     }); 
     const handleChange = (e) => {
         setFormData({
@@ -28,20 +44,20 @@ function Registro() {
         });
     };
 
-    const handleRegistro = (e) => {
+    const handleRegistro = async (e) => {
         e.preventDefault();
 
 
 
         //limpieza de espacio
-        const { nombre, ApellidoPaterno, ApellidoMaterno, matricula, carrera, cuatrimestre, correo, password, rol } = formData;
+        const { nombre, ApellidoPaterno, ApellidoMaterno, matricula, carrera, cuatrimestre, email, password, rol } = formData;
         
         const n = nombre.trim();
         const ap = ApellidoPaterno.trim();
         const am = ApellidoMaterno.trim();
 
         // Validación de campos vacíos
-        if (!n || !ap || !am || !matricula || !carrera || !cuatrimestre || !correo || !password || !rol) {
+        if (!n || !ap || !am || !matricula || !carrera || !cuatrimestre || !email || !password || !rol) {
             alertaCamposVacios();
             return;
         }
@@ -64,18 +80,32 @@ function Registro() {
             return;
         }
 
-        // Aquí iría la lógica para enviar los datos al backend o realizar alguna acción con ellos
-        const onSubmit = async (data) => {
+
+
+        // Aquí va la lógica para enviar los datos al backend
+
+   const usuariosData = {
+    nombre: formData.nombre,
+    apellidoPaterno: formData.ApellidoPaterno,
+    apellidoMaterno: formData.ApellidoMaterno,
+    matricula: formData.matricula,
+    carreraId: parseInt(formData.carrera), // Convertir a entero si el backend espera un ID que es numerico
+    cuatrimestre: formData.cuatrimestre,
+    email: formData.email,
+    password: formData.password,
+    rol: formData.rol == "Mentor" ? [1] : [2]  // Convertir a los roles para el backend
+    // si selecciona 1 es mentor pero si es 2 es aprendiz
+};
+
             try {
-                await enviarDatos('/api/usuarios', data);
+                await enviarDatos('/api/usuarios', usuariosData);
                 alertaExito("Usuario registrado correctamente");
+                navigate("/login");
             } catch (error) {
               alertaError("Error al procesar la solicitud");
               console.error("Error:", error);
             }
-          };
-        alertaExito();
-        navigate("/login");
+
     };
 
     return (
@@ -126,9 +156,11 @@ function Registro() {
                     <label >Carrera</label>
                     <select id="carrera" value={formData.carrera} onChange={handleChange}>
                         <option value="">Selecciona tu carrera:</option>
-                        <option value="sistemas">Ingenieria en Sistemas</option>
-                        <option value="administracion">Administracion</option>
-                        <option value="mecatronica">Mecatronica</option>
+                        {carreras.map((carrera) => (
+                            <option key={carrera.id} value={carrera.id}>
+                                {carrera.nombre}
+                            </option>
+                        ))}
                     </select>
                     </div>
                     <div className="input-group">
@@ -152,8 +184,8 @@ function Registro() {
                     <div className="form-row">
                         <div className="input-group">
                     <label >Correo</label>
-                    <input type="email" id="correo" placeholder="Ingrese su email" 
-                    value={formData.correo} onChange={handleChange}/>
+                    <input type="email" id="email" placeholder="Ingrese su email" 
+                    value={formData.email} onChange={handleChange}/>
                     </div>
 
                     <div className="input-group">
