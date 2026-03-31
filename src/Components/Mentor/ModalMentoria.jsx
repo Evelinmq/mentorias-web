@@ -4,6 +4,8 @@ import Input from "../Common/Input";
 import "../Admin/ModalesGlobal.css";
 
 import { enviarDatos } from "../../utils/api";
+import { useEffect, useState } from "react";
+import { obtenerDatos } from "../../utils/api";
 
 import {
   alertaExito,
@@ -35,13 +37,22 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
       }
 
       const payload = {
-        ...data,
-        aula: parseInt(data.aula),
+        fecha: data.fecha,
+        horaInicio: data.horaInicio,
+        horaFin: data.horaFin,
+
+        cuatrimestre: parseInt(data.cuatri),
+
+        // relaciones
+        espacio: { id: parseInt(data.aula) },
+        materia: { id: parseInt(data.materia) }
       };
+
+      console.log("PAYLOAD:", payload);
+
       await enviarDatos("/api/mentorias", payload);
 
       await alertaExito("La mentoría se registró con éxito");
-
       cerrar();
 
     } catch (error) {
@@ -53,6 +64,35 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
   const onError = async () => {
     await alertaCamposVacios();
   };
+
+  const [edificios, setEdificios] = useState([]);
+  const [cuatrimestres, setCuatrimestres] = useState([]);
+  const [materias, setMaterias] = useState([]);
+  const [aulas, setAulas] = useState([]);
+
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        const ed = await obtenerDatos("/api/edificios");
+        const ma = await obtenerDatos("/api/materias");
+        const au = await obtenerDatos("/api/espacios");
+        const cuatrisUnicos = [...new Set(ma.map(m => m.cuatrimestre))];
+
+        console.log("EDIFICIOS:", ed);
+        console.log("MATERIAS:", ma);
+        console.log("AULAS:", au);
+
+        setEdificios(ed);
+        setCuatrimestres(cuatrisUnicos);
+        setMaterias(ma);
+        setAulas(au);
+      } catch (error) {
+        console.error("Error cargando datos:", error);
+      }
+    };
+
+    cargarDatos();
+  }, []);
 
   return (
     <div className="modal-overlay">
@@ -101,14 +141,14 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
 
               <div className="form-group">
                 <label>Edificio</label>
-                <select
-                  className="modal-select"
-                  {...register("edificio", {
-                    required: "Selecciona un edificio",
-                  })}
-                >
+                <select className="modal-select"
+                {...register("edificio", { required: true })}>
                   <option value="">Selecciona</option>
-                  <option value="A">Edificio A</option>
+                  {edificios.map((ed) => (
+                    <option key={ed.id} value={ed.id}>
+                      {ed.nombre}
+                    </option>
+                  ))}
                 </select>
                 {errors.edificio && <span className="error">{errors.edificio.message}</span>}
               </div>
@@ -120,51 +160,40 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
 
               <div className="form-group">
                 <label>Cuatrimestre</label>
-                <select
-                  className="modal-select"
-                  {...register("cuatri", {
-                    required: "Selecciona un cuatrimestre",
-                  })}
-                >
+                <select {...register("cuatri", { required: true })}>
                   <option value="">Selecciona</option>
-                  <option value="1">1ero</option>
+                  {cuatrimestres.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
                 </select>
                 {errors.cuatri && <span className="error">{errors.cuatri.message}</span>}
               </div>
 
               <div className="form-group">
                 <label>Materia</label>
-                <Input
-                  type="text"
-                  name="materia"
-                  register={register}
-                  rules={{
-                    required: "La materia es obligatoria",
-                    pattern: {
-                      value: soloTexto,
-                      message: "No se permiten caracteres especiales",
-                    },
-                    validate: (value) =>
-                      value.trim() !== "" || "No puede estar vacío",
-                  }}
-                />
+                <select {...register("materia", { required: true })}>
+                  <option value="">Selecciona</option>
+                  {materias.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.nombre}
+                    </option>
+                  ))}
+                </select>
                 {errors.materia && <span className="error">{errors.materia.message}</span>}
               </div>
 
               <div className="form-group">
                 <label>Aula</label>
-                <Input
-                  type="text"
-                  name="aula"
-                  register={register}
-                  rules={{
-                    required: "El aula es obligatoria",
-                    pattern: {
-                      value: /^[0-9]+$/,
-                      message: "Solo números permitidos",
-                    },
-                  }}
-                />
+                <select {...register("aula", { required: true })}>
+                  <option value="">Selecciona</option>
+                  {aulas.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.nombre}
+                    </option>
+                  ))}
+                </select>
                 {errors.aula && <span className="error">{errors.aula.message}</span>}
               </div>
 
