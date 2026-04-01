@@ -1,51 +1,30 @@
-function AgendaMentor({ mentorias, diaSeleccionado }) {
+import MentoriaCard from "../Common/MentoriaCard";
 
-    const mentoriasDelDia = mentorias.filter(
-        m => m.fecha === diaSeleccionado
-    );
+function AgendaMentor({ mentorias, diaSeleccionado, onAceptar, onCancelar }) {
+  const fechaSeleccionada = diaSeleccionado
+    ? new Date(diaSeleccionado).toISOString().split("T")[0]
+    : null;
 
-    return (
+  const mentoriasDelDia = mentorias.filter((m) => m.fecha === fechaSeleccionada);
 
-        <div>
+  return (
+    <div className="agenda-container">
+      <h3 className="agenda-title">Agenda</h3>
 
-            <h3 className="agenda-title">
-                Agenda
-            </h3>
-
-            {!diaSeleccionado && (
-                <p>Selecciona un día del calendario</p>
-            )}
-
-            {mentoriasDelDia.map((m, index) => (
-
-                <div key={index} className="card-agenda">
-
-                    <h4>{m.alumno}</h4>
-
-                    <p>{m.materia}</p>
-
-                    <p>{m.hora}</p>
-
-                    <div className="agenda-buttons">
-
-                        <button className="btn-aceptar">
-                            Aceptar
-                        </button>
-
-                        <button className="btn-cancelar">
-                            Cancelar
-                        </button>
-
-                    </div>
-
-                </div>
-
-            ))}
-
-        </div>
-
-    )
-
+      {diaSeleccionado && mentoriasDelDia.length > 0 ? (
+        mentoriasDelDia.map((m, index) => (
+          <MentoriaCard
+            key={m.id}
+            m={m}
+            onAceptar={onAceptar}
+            onCancelar={onCancelar}
+          />
+        ))
+      ) : (
+        <p className="no-data">No hay mentorías para este día</p>
+      )}
+    </div>
+  );
 }
 
-export default AgendaMentor
+export default AgendaMentor;

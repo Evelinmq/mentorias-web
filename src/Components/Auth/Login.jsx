@@ -43,10 +43,12 @@ function Login() {
 
         console.log("login exitoso:", data);
 
+        localStorage.setItem("token", data.token);
+
         const correoUsuario = data.correo;
         const rolAsignado = data.rol ? data.rol.toLowerCase() : "";
 
-        login(correoUsuario, rolAsignado);
+        login(correoUsuario, rolAsignado, data.token);
 
     
 
@@ -72,55 +74,55 @@ function Login() {
   };
 
   return (
-      <div className="login-contenedor">
-        <div className="Circulo1" />
-        <div className="circulo2" />
-        <div className="circulo3" />
-        <div className="circulo4" />
-        <div className="circulo5" />
-        <div className="circulo6" />
-        <div className="circulo7" />
-        <div className="circulo8" />
+    <div className="login-contenedor">
+      <div className="Circulo1" />
+      <div className="circulo2" />
+      <div className="circulo3" />
+      <div className="circulo4" />
+      <div className="circulo5" />
+      <div className="circulo6" />
+      <div className="circulo7" />
+      <div className="circulo8" />
 
-        <div className="login-box">
-          <img src={logo} className="login-logo" alt="Logo" />
-          <h2 className="login-title">Inicio de Sesión</h2>
+      <div className="login-box">
+        <img src={logo} className="login-logo" alt="Logo" />
+        <h2 className="login-title">Inicio de Sesión</h2>
 
-          <form onSubmit={handleLogin}>
-            <label>Correo</label>
-            <input
-                type="email"
-                placeholder="Correo"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-            />
+        <form onSubmit={handleLogin}>
+          <label>Correo</label>
+          <input
+            type="email"
+            placeholder="Correo"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+          />
 
-            <label>Contraseña</label>
-            <input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
+          <label>Contraseña</label>
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-            <p
-                className="forgot"
-                onClick={() => navigate("/verificar-codigo")}
-                style={{ cursor: "pointer" }}
-            >
-              ¿Olvidaste tu contraseña?
-            </p>
-
-            <button type="submit" className="login-btn">
-              Iniciar Sesión
-            </button>
-          </form>
-
-          <p className="register" onClick={() => navigate("/registro")}>
-            ¿No tienes cuenta? <span>Crear cuenta</span>
+          <p
+            className="forgot"
+            onClick={() => navigate("/verificar-codigo")}
+            style={{ cursor: "pointer" }}
+          >
+            ¿Olvidaste tu contraseña?
           </p>
-        </div>
+
+          <button type="submit" className="login-btn">
+            Iniciar Sesión
+          </button>
+        </form>
+
+        <p className="register" onClick={() => navigate("/registro")}>
+          ¿No tienes cuenta? <span>Crear cuenta</span>
+        </p>
       </div>
+    </div>
   );
 }
 

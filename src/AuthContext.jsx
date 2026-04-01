@@ -9,8 +9,8 @@ export function AuthProvider({ children }) {
         return stored ? JSON.parse(stored) : null;
     });
 
-    const login = (correo, rol) => {
-        const usuario = { correo, rol };
+    const login = (correo, rol, token) => {
+        const usuario = { correo, rol, token }; // ← EL TOKEN VA AQUÍ
         setUser(usuario);
         localStorage.setItem("user", JSON.stringify(usuario));
     };

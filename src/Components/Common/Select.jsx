@@ -9,7 +9,6 @@ const Select = ({ register, name, options, rules, placeholder }) => {
             <option value="">{placeholder || "Selecciona"}</option>
 
             {options.map((opt, index) => {
-                // Verificamos si la opción es un objeto o un string simple
                 const value = typeof opt === 'object' ? opt.value : opt;
                 const label = typeof opt === 'object' ? opt.label : opt;
 
