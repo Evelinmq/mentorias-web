@@ -117,7 +117,7 @@ const VistaUsuarios = () => {
         setIsEditing(true);
         reset({
             id: user.id,
-            nombres: user.nombres,
+            nombres: user.nombre,
             apellidoP: user.apellidoP || "",
             apellidoM: user.apellidoM || "",
             correo: user.correo,
@@ -169,7 +169,7 @@ const VistaUsuarios = () => {
                 email: data.correo,
                 password: data.password || null,
                 carreraId: Number(data.carrera),
-                roles: data.rolesIds ? data.rolesIds.map(id => ({ id: Number(id) })) : []
+                rolesIds: data.rolesIds ? data.rolesIds.map(id => Number(id)) : []
             };
 
             if (isEditing) {
