@@ -4,6 +4,9 @@ import { AuthContext } from "../../AuthContext";
 import { alertaCamposVacios, alertaError, alertaExito } from "../../utils/alerts";
 import logo from "../../assets/logo.png";
 import "./Login.css";
+import AuthLayout from "../Common/AuthLayout";
+import FormField from "../Common/FormField";
+import Button from "../Common/Button";
 
 function Login() {
 
@@ -74,55 +77,42 @@ function Login() {
   };
 
   return (
-    <div className="login-contenedor">
-      <div className="Circulo1" />
-      <div className="circulo2" />
-      <div className="circulo3" />
-      <div className="circulo4" />
-      <div className="circulo5" />
-      <div className="circulo6" />
-      <div className="circulo7" />
-      <div className="circulo8" />
-
-      <div className="login-box">
+      <AuthLayout>
         <img src={logo} className="login-logo" alt="Logo" />
         <h2 className="login-title">Inicio de Sesión</h2>
 
         <form onSubmit={handleLogin}>
-          <label>Correo</label>
-          <input
-            type="email"
-            placeholder="Correo"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
+          <FormField
+              label="Correo"
+              type="email"
+              placeholder="Correo"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
           />
 
-          <label>Contraseña</label>
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+          <FormField
+              label="Contraseña"
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
           />
 
-          <p
-            className="forgot"
-            onClick={() => navigate("/verificar-codigo")}
-            style={{ cursor: "pointer" }}
-          >
+          <p className="forgot" onClick={() => navigate("/verificar-codigo")}>
             ¿Olvidaste tu contraseña?
           </p>
 
-          <button type="submit" className="login-btn">
-            Iniciar Sesión
-          </button>
+          <Button
+              type="submit"
+              className="login-btn"
+              text="Iniciar Sesión"
+          />
         </form>
 
         <p className="register" onClick={() => navigate("/registro")}>
           ¿No tienes cuenta? <span>Crear cuenta</span>
         </p>
-      </div>
-    </div>
+      </AuthLayout>
   );
 }
 

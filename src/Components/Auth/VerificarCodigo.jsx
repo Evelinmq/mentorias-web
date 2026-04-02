@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "./Recuperacion.css";
 import logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import AuthLayout from "../Common/AuthLayout";
+import Button from "../Common/Button";
+import PinInput from "../Common/PinInput";
 
 function VerificarCodigo() {
 
@@ -24,68 +27,37 @@ function VerificarCodigo() {
     }
 
     return (
+        <AuthLayout>
+            <img src={logo} className="cuenta-logo" alt="Logo" />
 
-        <div className="creacion-contenedor">
+            <h2 className="cuenta-title">
+                Recuperación de Contraseña
+            </h2>
 
-            <div className="Circulo1" />
-            <div className="circulo2" />
-            <div className="circulo3" />
-            <div className="circulo4" />
-            <div className="circulo5" />
-            <div className="circulo6" />
-            <div className="circulo8" />
+            <p>
+                Introduce el código que enviamos a tu correo
+            </p>
 
-            <div className="cuenta-box">
+            <PinInput
+                values={codigo}
+                onChange={handleChange}
+            />
 
-                <img src={logo} className="cuenta-logo" />
+            <div className="botones-recuperacion">
+                <Button
+                    text="Volver"
+                    className="btn-secundario"
+                    onClick={() => navigate("/login")}
+                />
 
-                <h2 className="cuenta-title">
-                    Recuperación de Contraseña
-                </h2>
-
-                <p>
-                    Introduce el código que enviamos a tu correo
-                </p>
-
-                <div className="codigo-container">
-
-                    {codigo.map((c, index) => (
-
-                        <input
-                            key={index}
-                            maxLength="1"
-                            className="codigo-input"
-                            value={c}
-                            onChange={(e) => handleChange(e.target.value, index)}
-                        />
-
-                    ))}
-
-                </div>
-
-                <div className="botones-recuperacion">
-
-                    <button
-                        className="btn-secundario"
-                        onClick={() => navigate("/login")}
-                    >
-                        Volver
-                    </button>
-
-                    <button
-                        className="btn"
-                        onClick={verificarCodigo}
-                    >
-                        Reenviar
-                    </button>
-
-                </div>
-
+                <Button
+                    text="Verificar"
+                    className="btn"
+                    onClick={verificarCodigo}
+                />
             </div>
-
-        </div>
-
-    )
+        </AuthLayout>
+    );
 
 }
 
