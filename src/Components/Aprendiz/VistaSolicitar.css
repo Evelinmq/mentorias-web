@@ -1,137 +1,26 @@
-.solicitud-view {
+.tema-input-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
-
-.solicitud-filtro {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.dropdown-wrapper { position: relative; }
-
-.dropdown-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-dark);
-    cursor: pointer;
-    min-width: 200px;
-    justify-content: space-between;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-
-.dropdown-list {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    min-width: 100%;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-    list-style: none;
-    margin: 0;
-    padding: 6px;
-    z-index: 50;
-}
-
-.dropdown-item {
-    padding: 9px 12px;
-    font-size: 13px;
-    border-radius: 7px;
-    cursor: pointer;
-    color: var(--text-mid);
-    transition: background 0.15s;
-}
-
-.dropdown-item:hover    { background: var(--gray-bg); }
-.dropdown-item.selected { background: var(--navy); color: white; font-weight: 600; }
-
-
-.solicitud-card { position: relative; }
-
-.card-nombre-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.card-cupos {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-mid);
-    white-space: nowrap;
-}
-
-.solicitud-tema-row {
-    display: flex;
-    align-items: center;
     gap: 6px;
-    margin-top: 2px;
+    margin-top: 8px;
 }
 
-.solicitud-tema-input {
-    flex: 1;
-    padding: 7px 10px;
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    font-size: 12px;
-    color: var(--text-dark);
-    background: var(--gray-bg);
-    outline: none;
-    transition: border-color 0.2s;
+.tema-error {
+    color: #d9534f;
+    font-size: 0.75rem;
+    margin-top: -2px;
 }
 
-.solicitud-tema-input:focus {
-    border-color: var(--navy);
-    background: white;
-}
-
-.solicitud-tema-input::placeholder { color: var(--text-light); }
-
-.solicitud-tema-add {
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-    border: none;
-    background: var(--navy);
-    color: white;
+.card-cupos-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.confirmar-btn {
-    margin-top: 6px;
-    width: 100%;
-    padding: 8px;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
+    gap: 5px;
+    font-size: 12px;
     font-weight: 600;
-    cursor: pointer;
-    background: var(--border);
-    color: var(--text-light);
-    transition: background 0.2s, color 0.2s;
+    color: var(--text-mid);
+    margin-bottom: 4px;
 }
 
-.confirmar-btn.active {
-    background: var(--navy);
-    color: white;
-    box-shadow: 0 4px 12px rgba(26,46,110,0.2);
+.card-agenda {
+    border-left: 4px solid #e91e8c; /* por defecto: pendiente */
 }

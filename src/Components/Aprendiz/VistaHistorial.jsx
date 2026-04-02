@@ -1,67 +1,64 @@
+import { useState, useEffect } from "react";
 import MentoriaCard from "../Common/MentoriaCard";
-
-const HISTORIAL = [
-    {
-        id: 1,
-        email: "20243dc153@utez.edu.mx",
-        fecha: "13/12/2025",
-        nombre: "John Marston Gonzales",
-        materia: "Inglés IV",
-        tema: "Phrasal Verbs",
-        aula: "A6 - Docencia I",
-        hora: "13:00 - 14:00",
-        tipo: "tomada",
-    },
-    {
-        id: 2,
-        email: "20243dc153@utez.edu.mx",
-        fecha: "07/12/2025",
-        nombre: "John Marston Gonzales",
-        materia: "Inglés IV",
-        tema: "Pasado perfecto",
-        aula: "A12 - Docencia V",
-        hora: "08:00 - 10:00",
-        tipo: "tomada",
-    },
-    {
-        id: 3,
-        email: "20223dc182@utez.edu.mx",
-        fecha: "30/01/2026",
-        nombre: "Gustavo Díaz Peña",
-        materia: "Matematica Aplicada",
-        tema: "Ecuaciones diferenciales",
-        aula: "A12 - Docencia V",
-        hora: "13:00 - 14:00",
-        tipo: "cancelada",
-        motivoCancelacion: "Me dio viruela x",
-    },
-];
+import { obtenerDatos } from "../../utils/api";
 
 export default function VistaHistorial() {
+    const [historial, setHistorial] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    useEffect(() => {
+        const cargar = async () => {
+            try {
+                const data = await obtenerDatos('/api/mentorias-usuarios');
+                const misHistorial = data.filter(
+                    i => i.usuario?.id === user?.id && i.estado !== 'activa'
+                );
+                setHistorial(misHistorial);
+            } catch (error) {
+                console.error('Error al cargar historial:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        cargar();
+    }, []);
+
+    if (loading) return <p style={{ padding: '2rem' }}>Cargando historial...</p>;
+
+    if (historial.length === 0) {
+        return (
+            <div className="empty-state">
+                <p className="empty-text">No tienes historial de mentorías</p>
+            </div>
+        );
+    }
+
     return (
         <>
             <div className="legend">
                 <span className="legend-item">
-                    <span className="dot confirmada" /> Asesoría Tomada
+                    <span className="dot" style={{ backgroundColor: '#22c55e' }} /> Asesoría Tomada
                 </span>
                 <span className="legend-item">
-                    <span className="dot por-aceptar" /> Canceladas
+                    <span className="dot" style={{ backgroundColor: '#64748b' }} /> Canceladas
                 </span>
             </div>
 
             <div className="cards-grid">
-                {HISTORIAL.map((item) => (
+                {historial.map((inscripcion) => (
                     <MentoriaCard
-                        key={item.id}
-                        data={item}
-                        status={item.tipo === "tomada" ? "confirmada" : "por-aceptar"}
+                        key={inscripcion.id}
+                        m={inscripcion.mentoria}
+                        tema={inscripcion.tema}
                         extraContent={
-                            item.tipo === "cancelada" && (
-                                <div className="card-field">
-                                    <span className="card-label">Motivo de la cancelación:</span>
-                                    <span className="card-value">{item.motivoCancelacion}</span>
+                            inscripcion.estado === 'cancelada' && inscripcion.motivoCancelacion ? (
+                                <div className="motivo-cancelacion">
+                                    <span className="label">Motivo de la cancelación:</span>
+                                    <span className="valor">{inscripcion.motivoCancelacion}</span>
                                 </div>
-                            )
+                            ) : null
                         }
                     />
                 ))}
