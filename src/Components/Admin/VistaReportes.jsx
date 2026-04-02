@@ -102,6 +102,20 @@ const VistaReportes = () => {
     },
   ];
 
+// la creacion de reportes pdf
+  const handleDescargarReporte = () => {
+ 
+  const mentor = filtroMentor || "";
+  const materia = filtroMateria || "";
+  const inicio = fechaInicio || "";
+  const fin = fechaFin || "";
+  
+  const url = `http://localhost:8080/api/reportes/mentorias?mentor=${mentor}&materia=${materia}&fechaInicio=${inicio}&fechaFin=${fin}`;
+
+  window.open(url, "_blank");
+};
+
+
   return (
     <div className="reportes-container">
       {/* --- INICIO HEADER --- */}
@@ -134,6 +148,9 @@ const VistaReportes = () => {
               />
           )}
 
+
+          
+
           {/* BUSADOR DE MATERIAS*/}
           {mostrarBuscadorMateria && (
               <SearchBar
@@ -157,7 +174,7 @@ const VistaReportes = () => {
 
           <DownloadButton
               icon={DownloadIcon}
-              onClick={() => alert("Preparando motores para Jaspersoft... 🚀")}
+              onClick={handleDescargarReporte}
           />
 
         </div>
