@@ -117,7 +117,7 @@ const VistaUsuarios = () => {
         setIsEditing(true);
         reset({
             id: user.id,
-            nombres: user.nombres,
+            nombres: user.nombre,
             apellidoP: user.apellidoP || "",
             apellidoM: user.apellidoM || "",
             correo: user.correo,
@@ -129,39 +129,19 @@ const VistaUsuarios = () => {
     };
 
     const handleAceptar = async (user) => {
-        try {
-            const payload = {
-                nombre: user.nombres,
-                apellidos: user.apellidos,
-                correo: user.correo,
-                estado: {
-                    id: 1
-                }
-            };
-
-            await actualizarDatos(`/api/usuarios/${user.id}`, payload);
-
-            alertaExito("Usuario aceptado");
-            cargarUsuarios();
-        } catch (error) {
-            console.error(error);
-            alertaError("Error al aceptar");
-        }
+        await handleEstado(user.id, 1);
     };
 
     const handleRechazar = async (id) => {
-        const confirmado = await confirmarRechazarSolicitud();
-
-        if (confirmado) {
             try {
                 await eliminarDatos(`/api/usuarios/${id}`);
                 alertaExito("Usuario rechazado");
-                cargarUsuarios();
+                cargarUsuarios(verPendientes ? 'Pendiente' : 'Activo');
             } catch (error) {
                 console.error(error);
                 alertaError("Error al rechazar la solicitud");
             }
-        }
+
     };
 
     const handleEliminar = async (id) => {
@@ -189,7 +169,7 @@ const VistaUsuarios = () => {
                 email: data.correo,
                 password: data.password || null,
                 carreraId: Number(data.carrera),
-                roles: data.rolesIds ? data.rolesIds.map(id => ({ id: Number(id) })) : []
+                rolesIds: data.rolesIds ? data.rolesIds.map(id => Number(id)) : []
             };
 
             if (isEditing) {
@@ -211,35 +191,32 @@ const VistaUsuarios = () => {
         }
     };
 
-    const handleEstado = async (user) => {
-        const estaActivo = user.estado?.id === 1;
-
-        if (estaActivo) {
-            const confirmado = await confirmarDesactivarUsuario();
-
-            if (!confirmado) {
-                return;
-            }
-        }
+    const handleEstado = async (idUsuario, nuevoEstadoId) => {
+        console.log("ENTRÓ A handleEstado", idUsuario, nuevoEstadoId);
 
         try {
-            const payload = {
-                nombre: user.nombres,
-                apellidos: user.apellidos,
-                correo: user.correo,
-                estado: {
-                    id: estaActivo ? 2 : 1
-                }
-            };
+            const response = await fetch('http://localhost:8080/api/usuarios/cambiar-estado', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: idUsuario,
+                    nuevoEstadoId: nuevoEstadoId
+                })
+            });
 
-            await actualizarDatos(`/api/usuarios/${user.id}`, payload);
+            console.log("RESPUESTA:", response);
 
-            alertaExito(estaActivo ? "Usuario desactivado" : "Usuario activado nuevamente");
-
-            cargarUsuarios();
+            if (response.ok) {
+                alertaExito("¡Estado actualizado!");
+                cargarUsuarios(verPendientes ? 'Pendiente' : 'Activo');
+            } else {
+                alertaError("Error al cambiar estado");
+            }
         } catch (error) {
-            console.error("Error al cambiar estado:", error);
-            alertaError("Error al cambiar el estado del usuario");
+            console.error("ERROR:", error);
+            alertaError("Error de conexión");
         }
     };
 
@@ -272,7 +249,7 @@ const VistaUsuarios = () => {
                             ? (
                                 <PendingActions
                                     user={user}
-                                    onAccept={handleAceptar}
+                                    onAccept={(user) => handleEstado(user.id, 1)}
                                     onReject={(user) => handleRechazar(user.id)}
                                 />
                             )
@@ -280,7 +257,7 @@ const VistaUsuarios = () => {
                                 <ActionButtons
                                     onEdit={() => handleEditar(user)}
                                     onDelete={() => handleEliminar(user.id)}
-                                    onBlock={() => handleEstado(user)}
+                                    onBlock={() => handleEstado(user.id, 2)}
                                 />
                             )
                     }

@@ -4,19 +4,17 @@ import { alertaExito, confirmarRechazarSolicitud } from "../../utils/alerts";
 import iconCheck from '../../assets/TickIcon.png';
 import iconCross from '../../assets/CrossIcon.png';
 
-const PendingActions = ({ user }) => {
+const PendingActions = ({ user, onAccept, onReject }) => {
 
     const aceptarSolicitud = () => {
-        console.log("Solicitud aceptada", user);
-        alertaExito("Usuario aceptado");
+        onAccept(user);
     };
 
     const rechazarSolicitud = async () => {
         const confirmar = await confirmarRechazarSolicitud();
 
         if (confirmar) {
-            console.log("Solicitud rechazada", user);
-            alertaExito("Se ha rechazado la solicitud del usuario");
+            onReject(user);
         }
     };
 
