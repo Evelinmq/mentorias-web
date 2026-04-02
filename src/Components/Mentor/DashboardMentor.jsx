@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../Common/Button";
-
 import CalendarioMentor from "./CalendarioMentor";
 import AgendaMentor from "./AgendaMentor";
 import ModalMentoria from "./ModalMentoria";
 import "./DashboardMentor.css";
 
-import { useEffect } from "react";
 import { obtenerDatos, actualizarDatos } from "../../utils/api";
 
 function DashboardMentor() {
     const [showModal, setShowModal] = useState(false);
-    const [diaSeleccionado, setDiaSeleccionado] = useState(null);
-
+    const [diaSeleccionado, setDiaSeleccionado] = useState(new Date().toISOString().split("T")[0]);
     const [mentorias, setMentorias] = useState([]);
+
+    const hoy = new Date().toISOString().split("T")[0];
+    const esFechaPasada = diaSeleccionado < hoy;
 
     const cargarMentorias = async () => {
         try {
@@ -46,10 +46,8 @@ function DashboardMentor() {
         }
     };
 
-
     return (
         <div className="dashboard-mentor">
-
             <div className="dashboard-body">
                 <aside>
                     <Button
@@ -63,13 +61,15 @@ function DashboardMentor() {
                         <Button
                             className="btn-agregar"
                             onClick={() => setShowModal(true)}
-                            text="+ Agregar"
+                            disabled={esFechaPasada}
+                            text={esFechaPasada ? "No disponible" : "+ Agregar"}
+                            style={esFechaPasada ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                         />
+                        
                         <h2 className="section-title">Calendario Asesorías</h2>
                         <CalendarioMentor
                             mentorias={mentorias}
                             onSeleccionarDia={setDiaSeleccionado}
-                            mesActual="Febrero 2026"
                         />
                     </div>
                 </main>
@@ -86,7 +86,10 @@ function DashboardMentor() {
 
             {showModal && (
                 <ModalMentoria
-                    cerrar={() => setShowModal(false)}
+                    cerrar={() => {
+                        setShowModal(false);
+                        cargarMentorias(); 
+                    }}
                     fechaPredefinida={diaSeleccionado}
                 />
             )}
