@@ -39,7 +39,7 @@ function CalendarioMentor({ mentorias, onSeleccionarDia }) {
             onChange={manejarCambio}
             value={fecha}
             tileContent={tileContent}
-            minDate={new Date()} 
+            //minDate={new Date()} 
         />
         
     );
