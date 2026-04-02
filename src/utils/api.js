@@ -42,8 +42,8 @@ export const enviarDatos = async (endpoint, data) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Error al enviar datos a ${endpoint} (Status: ${response.status})`);
-        }
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Error al enviar datos a ${endpoint} (Status: ${response.status})`);        }
 
         return await response.json();
     } catch (error) {

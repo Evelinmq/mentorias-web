@@ -40,7 +40,6 @@ const VistaUsuarios = () => {
     const cargarUsuarios = async (estado = 'Activo') => {
         try {
             const data = await obtenerDatos(`/api/usuarios/estado/${estado}`);
-            console.log("Datos recibidos del server:", data);
             setUsuarios(
                 data.map(u => ({
                     id: u.id,
@@ -220,12 +219,10 @@ const VistaUsuarios = () => {
         }
     };
 
-    // Función que reacciona si react-hook-form detecta campos vacíos
     const onErroresValidacion = () => {
         alertaCamposVacios();
     };
 
-    console.log("¿Qué tiene el estado usuarios justo ahora?", usuarios);
 
     return (
         <div className="usuarios-container">

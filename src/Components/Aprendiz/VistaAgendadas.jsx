@@ -1,32 +1,31 @@
+import { useState, useEffect } from "react";
 import MentoriaCard from "../Common/MentoriaCard";
-
-const MENTORIAS = [
-    {
-        id: 1,
-        email: "202243a148@utez.edu.mx",
-        fecha: "30/01/2026",
-        nombre: "Andres Manuel Lopez Obrador",
-        materia: "Contaduría I",
-        tema: "Evasion de impuestos",
-        aula: "A2 - Docencia 8",
-        hora: "13:00 - 14:00",
-        confirmada: true,
-    },
-    {
-        id: 2,
-        email: "20223dc182@utez.edu.mx",
-        fecha: "30/01/2026",
-        nombre: "Gustavo Díaz Peña",
-        materia: "Matematica aplicada",
-        tema: "Ecuaciones diferenciales",
-        aula: "A12 - Docencia V",
-        hora: "13:00 - 14:00",
-        confirmada: false,
-    },
-];
+import { obtenerDatos } from "../../utils/api";
 
 export default function VistaAgendadas() {
-    if (MENTORIAS.length === 0) {
+    const [inscripciones, setInscripciones] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const cargarInscripciones = async () => {
+        try {
+            setLoading(true);
+            const data = await obtenerDatos('/api/mentorias-usuarios');
+            const misInscripciones = data.filter(i => i.usuario?.id === user?.id);
+            setInscripciones(misInscripciones);
+        } catch (error) {
+            console.error('Error al cargar inscripciones:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => { cargarInscripciones(); }, []);
+
+    if (loading) return <p style={{ padding: '2rem' }}>Cargando mentorías...</p>;
+
+    if (inscripciones.length === 0) {
         return (
             <div className="empty-state">
                 <p className="empty-text">No tienes mentorías agendadas</p>
@@ -36,21 +35,22 @@ export default function VistaAgendadas() {
 
     return (
         <>
+            {/* Leyenda */}
             <div className="legend">
                 <span className="legend-item">
-                    <span className="dot confirmada" /> Confirmada
+                    <span className="dot" style={{ backgroundColor: '#22c55e' }} /> Confirmada
                 </span>
                 <span className="legend-item">
-                    <span className="dot por-aceptar" /> Por aceptar
+                    <span className="dot" style={{ backgroundColor: '#64748b' }} /> Por aceptar
                 </span>
             </div>
 
             <div className="cards-grid">
-                {MENTORIAS.map((m) => (
+                {inscripciones.map((inscripcion) => (
                     <MentoriaCard
-                        key={m.id}
-                        data={m}
-                        status={m.confirmada ? "confirmada" : "por-aceptar"}
+                        key={inscripcion.id}
+                        m={inscripcion.mentoria}
+                        tema={inscripcion.tema}
                     />
                 ))}
             </div>

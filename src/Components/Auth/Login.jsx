@@ -17,7 +17,6 @@ function Login() {
     e.preventDefault();
 
     if (correo === "" || password === "") {
-      console.log("Debes de completar todos los campos");
       alertaCamposVacios();
       return;
     }
@@ -26,10 +25,10 @@ function Login() {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Cambiado a JSON
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ // Enviar objeto JSON
-          correo: correo,      // Asegúrate que estos nombres coincidan con los de tu LoginDTO en Java
+        body: JSON.stringify({
+          correo: correo,
           password: password
         })
       });
@@ -38,14 +37,13 @@ function Login() {
 
         // SE EXTRAE Y SE LEE EL JSON
         const data = await response.json();
-        console.log("Respuesta secreta del backend:", data);
 
         localStorage.setItem("token", data.token);
 
         const correoUsuario = data.correo;
         const rolAsignado = data.rol ? data.rol.toLowerCase() : "";
 
-        login(correoUsuario, rolAsignado, data.token);
+        login(correoUsuario, rolAsignado, data.token, data.id, data.nombre);
 
         if (rolAsignado === "admin" || rolAsignado === "administrador" || rolAsignado === "role_admin") {
           navigate("/dashboard");
