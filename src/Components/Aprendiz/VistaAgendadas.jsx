@@ -1,4 +1,4 @@
-import MentoriaCard from "../Common/MentoriaCard";
+import AprendizCard from "../Aprendiz/AprendizCard";
 
 const MENTORIAS = [
     {
@@ -47,7 +47,7 @@ export default function VistaAgendadas() {
 
             <div className="cards-grid">
                 {MENTORIAS.map((m) => (
-                    <MentoriaCard
+                    <AprendizCard
                         key={m.id}
                         data={m}
                         status={m.confirmada ? "confirmada" : "por-aceptar"}

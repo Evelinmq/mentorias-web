@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import MentoriaCard from "../Common/MentoriaCard";
+import AprendizCard from "../Aprendiz/AprendizCard";
 import { obtenerDatos } from "../../utils/api";
 
 export default function VistaHistorial() {
@@ -48,7 +48,7 @@ export default function VistaHistorial() {
 
             <div className="cards-grid">
                 {historial.map((inscripcion) => (
-                    <MentoriaCard
+                    <AprendizCard
                         key={inscripcion.id}
                         m={inscripcion.mentoria}
                         tema={inscripcion.tema}

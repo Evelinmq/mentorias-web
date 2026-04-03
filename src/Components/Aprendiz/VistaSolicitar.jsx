@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import MentoriaCard from "../Common/MentoriaCard";
+import AprendizCard from "../Aprendiz/AprendizCard";
 import Button from "../Common/Button";
 import "./VistaSolicitar.css";
 import Swal from 'sweetalert2';
@@ -196,7 +196,7 @@ export default function VistaSolicitar() {
             ) : (
                 <div className="cards-grid">
                     {mentoriasFiltradas.map((m) => (
-                        <MentoriaCard
+                        <AprendizCard
                             key={m.id}
                             m={m}
                             extraContent={
