@@ -47,7 +47,7 @@ const VistaReportes = () => {
 
   const mentoriasFiltradas = mentorias.filter((m) => {
     // 1. Blindaje para Mentor (evita que truene si mentor es null)
-    const nombreCompleto = `${m.mentor?.nombre || ''} ${m.mentor?.apellidos || ''}`.toLowerCase();
+    const nombreCompleto = `${m.mentor?.nombre || ''} ${m.mentor?.apellidoP || ''} ${m.mentor?.apellidoM || ''}}`.toLowerCase();
     const matchMentor = nombreCompleto.includes(filtroMentor.toLowerCase());
 
     // 2. Blindaje para Materia
@@ -84,7 +84,7 @@ const VistaReportes = () => {
     },
     {
       header: "Mentor",
-      render: (row) => `${row.mentor?.nombre || ''} ${row.mentor?.apellidos || ''}`
+      render: (row) => `${row.mentor?.nombre || ''} ${row.mentor?.apellidoP || ''} ${row.mentor?.apellidoM || ''}`
     },
     {
       header: "Carrera",
