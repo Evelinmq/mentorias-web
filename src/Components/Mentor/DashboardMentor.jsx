@@ -4,6 +4,8 @@ import CalendarioMentor from "./CalendarioMentor";
 import AgendaMentor from "./AgendaMentor";
 import ModalMentoria from "./ModalMentoria";
 import "./DashboardMentor.css";
+import { useContext } from "react";
+import { AuthContext } from "../../AuthContext";
 
 import { obtenerDatos, actualizarDatos } from "../../utils/api";
 
@@ -12,21 +14,29 @@ function DashboardMentor() {
     const [diaSeleccionado, setDiaSeleccionado] = useState(new Date().toISOString().split("T")[0]);
     const [mentorias, setMentorias] = useState([]);
 
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
     const hoy = new Date().toISOString().split("T")[0];
     const esFechaPasada = diaSeleccionado < hoy;
 
     const cargarMentorias = async () => {
-        try {
-            const data = await obtenerDatos("/api/mentorias");
-            setMentorias(data);
-        } catch (error) {
-            console.error("Error cargando mentorías:", error);
-        }
-    };
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+    if (!usuario || !usuario.id) return;
+
+    try {
+        const data = await obtenerDatos(`/api/mentorias/mentor/${usuario.id}`);
+        setMentorias(data);
+    } catch (error) {
+        console.error("Error cargando mentorías:", error);
+    }
+};
 
     useEffect(() => {
-        cargarMentorias();
-    }, []);
+        if (usuario?.id) {
+            cargarMentorias();
+        }
+    }, [usuario]);
 
     const aceptarMentoria = async (id) => {
         try {
@@ -65,7 +75,7 @@ function DashboardMentor() {
                             text={esFechaPasada ? "No disponible" : "+ Agregar"}
                             style={esFechaPasada ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                         />
-                        
+
                         <h2 className="section-title">Calendario Asesorías</h2>
                         <CalendarioMentor
                             mentorias={mentorias}
@@ -86,9 +96,10 @@ function DashboardMentor() {
 
             {showModal && (
                 <ModalMentoria
+                    usuario={usuario}
                     cerrar={() => {
                         setShowModal(false);
-                        cargarMentorias(); 
+                        cargarMentorias();
                     }}
                     fechaPredefinida={diaSeleccionado}
                 />

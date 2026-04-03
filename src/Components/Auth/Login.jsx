@@ -77,12 +77,19 @@ function Login() {
 
         localStorage.setItem("token", data.token);
 
+        localStorage.setItem("usuario", JSON.stringify({
+          id: data.id,
+          nombre: data.nombre,
+          correo: data.correo,
+          rol: data.rol
+        }));
+
         const correoUsuario = data.correo;
         const rolAsignado = data.rol ? data.rol.toLowerCase() : "";
 
         login(correoUsuario, rolAsignado, data.token);
 
-    
+
 
         if (rolAsignado === "admin" || rolAsignado === "administrador" || rolAsignado === "role_admin") {
           navigate("/dashboard");
@@ -96,7 +103,7 @@ function Login() {
         }
 
       } else {
-       alertaError("Sigue en pendiente de aprobación o estan mal tu correo o contraseña");
+        alertaError("Sigue en pendiente de aprobación o estan mal tu correo o contraseña");
       }
 
     } catch (error) {
@@ -106,42 +113,42 @@ function Login() {
   };
 
   return (
-      <AuthLayout>
-        <img src={logo} className="login-logo" alt="Logo" />
-        <h2 className="login-title">Inicio de Sesión</h2>
+    <AuthLayout>
+      <img src={logo} className="login-logo" alt="Logo" />
+      <h2 className="login-title">Inicio de Sesión</h2>
 
-        <form onSubmit={handleLogin}>
-          <FormField
-              label="Correo"
-              type="email"
-              placeholder="Correo"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-          />
+      <form onSubmit={handleLogin}>
+        <FormField
+          label="Correo"
+          type="email"
+          placeholder="Correo"
+          value={correo}
+          onChange={(e) => setCorreo(e.target.value)}
+        />
 
-          <FormField
-              label="Contraseña"
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-          />
+        <FormField
+          label="Contraseña"
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <p className="forgot" onClick={handleForgotPassword} style={{ cursor: "pointer" }}>
-            ¿Olvidaste tu contraseña?
-          </p>
-
-          <Button
-              type="submit"
-              className="login-btn"
-              text="Iniciar Sesión"
-          />
-        </form>
-
-        <p className="register" onClick={() => navigate("/registro")}>
-          ¿No tienes cuenta? <span>Crear cuenta</span>
+        <p className="forgot" onClick={handleForgotPassword} style={{ cursor: "pointer" }}>
+          ¿Olvidaste tu contraseña?
         </p>
-      </AuthLayout>
+
+        <Button
+          type="submit"
+          className="login-btn"
+          text="Iniciar Sesión"
+        />
+      </form>
+
+      <p className="register" onClick={() => navigate("/registro")}>
+        ¿No tienes cuenta? <span>Crear cuenta</span>
+      </p>
+    </AuthLayout>
   );
 }
 

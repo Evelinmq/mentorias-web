@@ -2,7 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Input from "../Common/Input";
 import "../Admin/ModalesGlobal.css";
-
+import { useContext } from "react";
+import { AuthContext } from "../../AuthContext";
 import { enviarDatos } from "../../utils/api";
 import { useEffect, useState } from "react";
 import { obtenerDatos } from "../../utils/api";
@@ -13,7 +14,7 @@ import {
   alertaCamposVacios
 } from "../../utils/alerts";
 
-function ModalMentoria({ cerrar, fechaPredefinida }) {
+function ModalMentoria({ cerrar, fechaPredefinida, usuario }) {
   const hoy = new Date().toISOString().split("T")[0];
 
   const {
@@ -43,8 +44,9 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
         horaFin: data.horaFin,
 
         cuatrimestre: parseInt(data.cuatri),
+        cupo: 5,
+        mentor: { id: usuario.id },
 
-        // relaciones
         espacio: { id: parseInt(data.aula) },
         materia: { id: parseInt(data.materia) }
       };
@@ -138,7 +140,7 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
                   rules={{
                     required: "Hora fin obligatoria",
                     validate: (value) => {
-                      if (!horaInicioActu) return true; 
+                      if (!horaInicioActu) return true;
                       return value > horaInicioActu || "La hora fin debe ser mayor a la hora inicio";
                     }
                   }}

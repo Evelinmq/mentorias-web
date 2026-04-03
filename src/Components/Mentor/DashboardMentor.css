@@ -1,9 +1,12 @@
+/* --- CONTENEDOR PRINCIPAL DASHBOARD --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 .dashboard-mentor {
     height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: #F4F7F9; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
 .dashboard-body {
@@ -13,9 +16,10 @@
     overflow: hidden;
 }
 
+/* --- SIDEBAR IZQUIERDO (NAVEGACIÓN) --- */
 .dashboard-body aside:first-of-type {
     background-color: white;
-    border-right: 1px solid #E0E4E8;
+    border-right: 1px solid #E2E8F0;
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
@@ -26,10 +30,10 @@
     width: 100%;
     padding: 12px;
     border-radius: 10px;
-    font-weight: bold;
+    font-weight: 700;
     border: none;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
 .btn-agregar {
@@ -43,6 +47,12 @@
     color: white;
 }
 
+.btn-asesorias:not(.active) {
+    background-color: transparent;
+    color: #64748B;
+}
+
+/* --- CONTENIDO CENTRAL (CALENDARIO) --- */
 .main-content {
     display: flex;
     justify-content: center;
@@ -64,15 +74,8 @@
 .section-title {
     color: #132D63;
     font-size: 1.6rem;
+    font-weight: 700;
     margin-bottom: 30px;
-}
-
-.agenda-sidebar {
-    background-color: white;
-    border-left: 1px solid #E0E4E8;
-    padding: 25px;
-    overflow-y: auto;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.02);
 }
 
 .react-calendar {
@@ -83,163 +86,198 @@
 .react-calendar__tile--active {
     background: #132D63 !important;
     border-radius: 8px;
+    color: white;
 }
 
-/* --- ESTILOS DE LA CARD (FIGMA STYLE) --- */
+/* --- SIDEBAR DERECHO (AGENDA) --- */
+.agenda-sidebar {
+    background-color: white;
+    border-left: 1px solid #E2E8F0;
+    padding: 25px;
+    overflow-y: auto;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.02);
+}
+
+/* --- CARD PRINCIPAL --- */
 .card-agenda {
-    background: #F3F6F9; /* Gris muy claro de fondo */
-    border-radius: 20px;
-    margin-bottom: 20px;
-    padding: 18px;
+    background: #FFFFFF;
+    border-radius: 20px; /* Un poco más pequeño para ser proporcional */
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid #F1F5F9;
     position: relative;
-    border-left: 6px solid #CBD5E1; /* Borde lateral grueso */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
 }
 
-/* Colores dinámicos por estado */
-.card-agenda.aceptadas { border-left-color: #22C55E; }   /* Verde */
-.card-agenda.pendientes { border-left-color: #EC4899; }  /* Rosa/Fucsia */
-.card-agenda.canceladas { border-left-color: #334155; }  /* Azul oscuro/Gris */
-.card-agenda.sin-alumnos { border-left-color: #94A3B8; } /* Azul claro */
+/* Borde lateral más fino */
+.card-agenda::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15px;
+    bottom: 15px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+}
 
+/* Colores de estado basados en tu captura */
+.card-agenda.aceptadas::before { background: #22C55E; }
+.card-agenda.pendientes::before { background: #E91E63; }
+.card-agenda.canceladas::before { background: #475569; }
+.card-agenda.sin-alumnos::before { background: #94A3B8; }
+
+/* HEADER */
 .card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.mentor-email {
+    font-size: 11px;
+    color: #64748B;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.fecha-card {
+    font-size: 11px;
+    color: #1E293B;
+    font-weight: 700;
+}
+
+/* CUERPO */
+.info-principal {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
 }
 
-.mentor-email {
-    font-size: 0.85rem;
-    color: #132D63;
-    text-decoration: underline;
-    font-weight: 500;
-}
-
-.fecha-card {
-    font-size: 0.85rem;
-    color: #64748B;
-    font-weight: bold;
-}
-
-.info-principal {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
 .info-principal h4 {
-    margin: 0;
-    font-size: 1.05rem;
-    color: #132D63;
+    font-size: 16px; /* Más pequeño y elegante */
     font-weight: 700;
+    color: #1E293B;
+    margin: 0;
 }
 
-/* Punto de estado dinámico */
 .status-dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
 }
-.status-dot.aceptadas { background-color: #29D62F; }
-.status-dot.pendientes { background-color: #D62974; }
-.status-dot.canceladas { background-color: #334155; }
-.status-dot.sin-alumnos { background-color: #9DB4E3; }
 
+/* FILAS DE TEXTO */
 .detalle-row {
     display: flex;
-    gap: 8px;
+    font-size: 13px;
     margin-bottom: 4px;
-    font-size: 0.9rem;
 }
 
-.detalle-row .label {
+.detalle-row.space-between {
+    justify-content: space-between;
+}
+
+.label {
+    color: #1E293B;
     font-weight: 700;
-    color: #132D63;
+    margin-right: 6px;
 }
 
-.detalle-row .valor {
+.valor {
     color: #64748B;
+    font-weight: 400;
 }
 
+/* ICONOS (Mismo color que el texto) */
 .icon-info-grid {
     display: flex;
     gap: 20px;
-    margin: 15px 0;
+    margin: 12px 0;
 }
 
 .icon-item {
     display: flex;
     align-items: center;
-    font-size: 0.85rem;
-    color: #475569;
+    gap: 6px;
+    color: #475569; /* Gris oscuro igual a la letra */
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .icon-item svg {
-    color: #132D63;
-    margin-right: 6px;
+    color: #475569; /* Icono del mismo color que el texto */
+    width: 16px;
+    height: 16px;
 }
 
-.comentario-section {
-    margin-top: 15px;
-}
-
+/* COMENTARIO */
 .comentario-section label {
-    display: block;
-    font-size: 0.75rem;
-    color: #64748B;
+    font-size: 11px;
+    color: #94A3B8;
+    font-weight: 600;
     margin-bottom: 4px;
+    display: block;
 }
 
-.comentario-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.comentario-section input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    background: white;
-}
-
-.card-buttons {
+.comentario-row {
     display: flex;
     gap: 8px;
+    align-items: center;
 }
 
+.comentario-row input {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* BOTONES PEQUEÑOS */
 .btn-aceptar, .btn-cancelar-agenda {
     padding: 8px 16px;
     border-radius: 8px;
-    font-size: 0.85rem;
+    font-size: 12px;
     font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
 }
 
 .btn-aceptar {
-    background-color: #132D63;
+    background: #132D63;
     color: white;
 }
 
 .btn-cancelar-agenda {
-    background-color: #CBD5E1;
-    color: #334155;
+    background: #E2E8F0;
+    color: #475569;
 }
-
-.btn-aceptar:hover { background-color: #1e3a8a; }
-.btn-cancelar-agenda:hover { background-color: #94A3B8; }
 
 .texto-cancelado {
-    color: #64748B;
-    font-size: 0.85rem;
-    font-weight: 700;
-    font-style: italic;
-    padding: 8px 0;
-    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px; /* Tamaño pequeño para que no compita con el nombre */
+    font-weight: 800; /* Extra Bold para mantener la esencia */
+    color: #94A3B8; /* Gris azulado suave (Slate-400) */
+    text-transform: capitalize; /* "Asesoría Cancelada" */
+    
+    /* Alineación */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Espaciado para que ocupe el lugar de los botones */
+    padding: 10px 15px;
+    background: #F8FAFC; /* Un fondo muy tenue para que parezca un "badge" deshabilitado */
+    border-radius: 12px;
+    flex: 1; /* Ocupa el espacio disponible al lado del input */
+    max-width: fit-content; 
+    margin-left: auto; /* Lo empuja hacia la derecha */
 }
+
+.btn-aceptar:hover { opacity: 0.9; transform: translateY(-1px); }
