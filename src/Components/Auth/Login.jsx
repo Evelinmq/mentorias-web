@@ -16,6 +16,35 @@ function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleForgotPassword = async () => {
+    // Validar que el campo correo no esté vacío
+    if (!correo) {
+      alertaError("Por favor, ingresa tu correo para recuperar la contraseña.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/usuarios/recuperar-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: correo })
+      });
+
+      if (response.ok) {
+        alertaExito("Código enviado a tu correo");
+
+        // Mandamos el correo a la siguiente pantalla vía 'state'
+        // Así la pantalla del código sabe a quién le pertenece ese código
+        navigate("/verificar-codigo", { state: { correoDestino: correo } });
+      } else {
+        alertaError("El correo ingresado no está registrado.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alertaError("Error al conectar con el servidor.");
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -98,7 +127,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
           />
 
-          <p className="forgot" onClick={() => navigate("/verificar-codigo")}>
+          <p className="forgot" onClick={handleForgotPassword} style={{ cursor: "pointer" }}>
             ¿Olvidaste tu contraseña?
           </p>
 
