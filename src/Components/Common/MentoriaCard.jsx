@@ -18,30 +18,29 @@ const IconHora = () => (
 );
 
 const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
-    const estadoNombre = m.estado?.nombre?.toLowerCase() || 'pendiente';
+    const nombreEstadoBD = m.estado?.nombre?.toLowerCase().trim() || '';
 
-    // Mapeo de estados 
     const mappingEstados = {
         'aceptada': 'aceptadas',
-        'agendada': 'aceptadas',
-        'pendiente': 'pendientes',
         'cancelada': 'canceladas',
-        'sin alumnos': 'sin-alumnos'
+        'pendiente': 'pendientes',
+        'sin alumnos': 'sin-alumnos',
+        'por aceptar': 'pendientes'
     };
 
-    const estadoClase = mappingEstados[estadoNombre] || 'pendientes';
+    const estadoClase = mappingEstados[nombreEstadoBD] || 'sin-alumnos';
 
     return (
         <div className={`card-agenda ${estadoClase}`}>
             <div className="card-header">
-                <span className="mentor-email">{m.mentor?.email || "usuario@utez.edu.mx"}</span>
+                <span className="mentor-email">{m.alumno?.email || "Espacio libre"}</span>
                 <span className="fecha-card">{m.fecha}</span>
             </div>
 
             <div className="card-body">
                 <div className="info-principal">
-                    <h4>{m.mentor ? `${m.mentor.nombre} ${m.mentor.apellidoP}` : "Sin nombre"}</h4>
-                    <div className={`status-dot ${estadoClase}`}></div>
+                    <h4>{m.alumno?.nombre || "Disponible"}</h4>
+                    <span className={`status-dot ${estadoClase}`}></span>
                 </div>
 
                 <div className="detalle-row">
@@ -70,20 +69,22 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
                         <label>Comentario</label>
                         <input type="text" placeholder="Razón de asesoría..." disabled />
                     </div>
-                    <div className="card-buttons">
-                        <button
-                            className="btn-aceptar"
-                            onClick={() => onAceptar(m.id)}
-                        >
-                            Aceptar
-                        </button>
 
-                        <button
-                            className="btn-cancelar-agenda"
-                            onClick={() => onCancelar(m.id)}
-                        >
-                            Cancelar
-                        </button>
+                    <div className="card-buttons">
+                        {nombreEstadoBD !== 'cancelada' ? (
+                            <>
+                                {(nombreEstadoBD === 'pendiente' || nombreEstadoBD === 'por aceptar') && (
+                                    <button className="btn-aceptar" onClick={() => onAceptar(m.id)}>
+                                        Aceptar
+                                    </button>
+                                )}
+                                <button className="btn-cancelar-agenda" onClick={() => onCancelar(m.id)}>
+                                    {nombreEstadoBD === 'sin alumnos' ? 'Eliminar' : 'Cancelar'}
+                                </button>
+                            </>
+                        ) : ( 
+                            <span className="texto-cancelado">Asesoría Cancelada</span>
+                        )}
                     </div>
                 </div>
             </div>

@@ -142,10 +142,10 @@
     height: 12px;
     border-radius: 50%;
 }
-.status-dot.aceptadas { background-color: #22C55E; }
-.status-dot.pendientes { background-color: #EC4899; }
+.status-dot.aceptadas { background-color: #29D62F; }
+.status-dot.pendientes { background-color: #D62974; }
 .status-dot.canceladas { background-color: #334155; }
-.status-dot.sin-alumnos { background-color: #94A3B8; }
+.status-dot.sin-alumnos { background-color: #9DB4E3; }
 
 .detalle-row {
     display: flex;
@@ -163,7 +163,6 @@
     color: #64748B;
 }
 
-/* Grid de Iconos (Aula y Hora) */
 .icon-info-grid {
     display: flex;
     gap: 20px;
@@ -182,7 +181,6 @@
     margin-right: 6px;
 }
 
-/* Sección de Comentario y Botones */
 .comentario-section {
     margin-top: 15px;
 }
@@ -236,3 +234,12 @@
 
 .btn-aceptar:hover { background-color: #1e3a8a; }
 .btn-cancelar-agenda:hover { background-color: #94A3B8; }
+
+.texto-cancelado {
+    color: #64748B;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-style: italic;
+    padding: 8px 0;
+    display: block;
+}

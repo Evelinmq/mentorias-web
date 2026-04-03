@@ -19,6 +19,7 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -93,7 +94,7 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
 
     cargarDatos();
   }, []);
-
+  const horaInicioActu = watch("horaInicio");
   return (
     <div className="modal-overlay">
       <div className="modal-container-custom">
@@ -134,15 +135,21 @@ function ModalMentoria({ cerrar, fechaPredefinida }) {
                   type="time"
                   name="horaFin"
                   register={register}
-                  rules={{ required: "Hora fin obligatoria" }}
+                  rules={{
+                    required: "Hora fin obligatoria",
+                    validate: (value) => {
+                      if (!horaInicioActu) return true; 
+                      return value > horaInicioActu || "La hora fin debe ser mayor a la hora inicio";
+                    }
+                  }}
                 />
                 {errors.horaFin && <span className="error">{errors.horaFin.message}</span>}
               </div>
 
               <div className="form-group">
-                <label>Edificio</label>
+                <label className="label">Edificio</label>
                 <select className="modal-select"
-                {...register("edificio", { required: true })}>
+                  {...register("edificio", { required: true })}>
                   <option value="">Selecciona</option>
                   {edificios.map((ed) => (
                     <option key={ed.id} value={ed.id}>
