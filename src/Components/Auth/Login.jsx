@@ -7,14 +7,32 @@ import "./Login.css";
 import AuthLayout from "../Common/AuthLayout";
 import FormField from "../Common/FormField";
 import Button from "../Common/Button";
+import RoleSelectionModal from "./RoleSelectionModal";
 
 function Login() {
 
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
 
+  // Para la elcción de rol al iniciar sesión en un usuario con roles mentor y aprendiz
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [tempUserData, setTempData] = useState(null);
+
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Función para redirigir según el rol seleccionado
+  const handleRoleSelection = (selectedRol) => {
+    const { correo, token } = tempUserData;
+    login(correo, selectedRol, token);
+
+    if (selectedRol === "mentor") {
+      navigate("/mentor/dashboard");
+    } else {
+      navigate("/aprendiz/dashboard");
+    }
+    setShowRoleModal(false);
+  };
 
   const handleForgotPassword = async () => {
     // Validar que el campo correo no esté vacío
@@ -49,7 +67,6 @@ function Login() {
     e.preventDefault();
 
     if (correo === "" || password === "") {
-      console.log("Debes de completar todos los campos");
       alertaCamposVacios();
       return;
     }
@@ -57,63 +74,68 @@ function Login() {
     try {
       const response = await fetch("http://localhost:8080/api/usuarios/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Cambiado a JSON
-        },
-        body: JSON.stringify({ // Enviar objeto JSON
-          correo: correo,      // Asegúrate que estos nombres coincidan con los de tu LoginDTO en Java
-          password: password
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo, password })
       });
-
 
       const data = await response.json();
 
       if (response.ok) {
-
-        alertaExito("Inicio de sesión exitoso");
-
-        console.log("login exitoso:", data);
-
+        // Guardamos datos en local para persistencia básica
         localStorage.setItem("token", data.token);
+        localStorage.setItem("usuario", JSON.stringify(data));
 
-        localStorage.setItem("usuario", JSON.stringify({
-          id: data.id,
-          nombre: data.nombre,
-          correo: data.correo,
-          rol: data.rol
-        }));
-
-        const correoUsuario = data.correo;
         const rolAsignado = data.rol ? data.rol.toLowerCase() : "";
 
-        login(correoUsuario, rolAsignado, data.token);
+        // --- Lógica de Decisión con Modal ---
 
+        // 1. Caso: Tiene AMBOS roles (tu alert mostró "mentor,aprendiz")
+        if (rolAsignado.includes("mentor") && rolAsignado.includes("aprendiz")) {
+          setTempData(data); // Guardamos la info para usarla al elegir
+          setShowRoleModal(true); // Mostramos el modal que ya creamos
+          return; // Detenemos aquí para que no navegue solo
+        }
 
-
-        if (rolAsignado === "admin" || rolAsignado === "administrador" || rolAsignado === "role_admin") {
+        // 2. Caso: Roles individuales (Admin, Mentor solo o Aprendiz solo)
+        if (rolAsignado.includes("admin") || rolAsignado.includes("administrador")) {
+          login(data.correo, "admin", data.token);
           navigate("/dashboard");
-        } else if (rolAsignado === "mentor" || rolAsignado === "role_mentor") {
+        }
+        else if (rolAsignado.includes("mentor")) {
+          login(data.correo, "mentor", data.token);
           navigate("/mentor/dashboard");
-        } else if (rolAsignado === "aprendiz" || rolAsignado === "role_aprendiz") {
+        }
+        else if (rolAsignado.includes("aprendiz")) {
+          login(data.correo, "aprendiz", data.token);
           navigate("/aprendiz/dashboard");
-        } else {
-          alert("Iniciaste sesión, pero tu rol es desconocido: " + rolAsignado);
+        }
+        else {
+          // Por si acaso no reconoce el string
+          alert("Rol desconocido: " + rolAsignado);
           navigate("/aprendiz/dashboard");
         }
 
-      } else {
-        alertaError("Sigue en pendiente de aprobación o estan mal tu correo o contraseña");
-      }
+        alertaExito("Inicio de sesión exitoso");
 
+      } else {
+        alertaError("Error: Credenciales inválidas o cuenta inactiva.");
+      }
     } catch (error) {
-      console.error("Error conectando con el backend:", error);
-      alert("No se pudo conectar con el servidor. Verifica que Spring Boot esté encendido.");
+      console.error("Error:", error);
+      alertaError("No se pudo conectar con el servidor.");
     }
   };
 
   return (
+  <>
+    <RoleSelectionModal
+        isOpen={showRoleModal}
+        onSelectRole={handleRoleSelection}
+    />
+
     <AuthLayout>
+
+
       <img src={logo} className="login-logo" alt="Logo" />
       <h2 className="login-title">Inicio de Sesión</h2>
 
@@ -148,9 +170,10 @@ function Login() {
       <p className="register" onClick={() => navigate("/registro")}>
         ¿No tienes cuenta? <span>Crear cuenta</span>
       </p>
+
     </AuthLayout>
+  </>
   );
 }
 
-//No
 export default Login;
