@@ -7,18 +7,18 @@ import { obtenerDatos, enviarDatos } from "../../utils/api";
 
 const IconPersonas = () => (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
 );
 
 const IconFiltro = () => (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
 );
 
@@ -58,25 +58,29 @@ function TemaInput({ onConfirmar, sinCupos }) {  // ← agrega sinCupos
     }
 
     return (
-        <div className="tema-input-wrapper">
+        <div className="input-container-figma">
             <div className="solicitud-tema-row">
                 <input
-                    className={`solicitud-tema-input ${error ? "input-error" : ""}`}
-                    type="text"
-                    placeholder="Proponer tema (ej. Derivadas)"
+
+                    className="solicitud-tema-input"
+                    placeholder="Proponer tema"
                     value={tema}
                     onChange={handleChange}
-                    maxLength={55}
+                />
+                {/* El icono "+" que se ve en la imagen */}
+                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
+                </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                <Button
+                    text="Confirmar"
+                    className="btn-confirmar-figma"
+                    disabled={!isValid}
+                    onClick={handleConfirmar}
                 />
             </div>
-            {error && <span className="tema-error">{error}</span>}
-            <Button
-                text="Confirmar"
-                className={`confirmar-btn ${isValid ? "active" : ""}`}
-                disabled={!isValid}
-                onClick={handleConfirmar}
-                type="button"
-            />
         </div>
     );
 }
@@ -119,7 +123,7 @@ export default function VistaSolicitar() {
         try {
             setLoading(true);
             const [mentorias, inscripciones] = await Promise.all([
-                obtenerDatos('/api/mentorias'),
+                obtenerDatos('/api/mentorias/proximas'),
                 obtenerDatos('/api/mentorias-usuarios')
             ]);
 
@@ -195,25 +199,26 @@ export default function VistaSolicitar() {
                 </div>
             ) : (
                 <div className="cards-grid">
-                    {mentoriasFiltradas.map((m) => (
-                        <AprendizCard
-                            key={m.id}
-                            m={m}
-                            extraContent={
-                                <>
-                                    <div className="card-cupos-row">
-                                        <IconPersonas />
-                                        <span className="card-cupos">
-                                             {m.cuposDisponibles} / {m.cupo} cupos disponibles
-                                        </span>
-                                    </div>
-                                    <TemaInput
-                                        onConfirmar={(tema) => handleConfirmar(m, tema)}
-                                        sinCupos={m.cuposDisponibles <= 0}
-                                    />                                </>
-                            }
-                        />
-                    ))}
+                    {mentoriasFiltradas
+                        .filter(m => m.mentor && m.mentor.nombre) // Ignora las que no traen mentor real
+                        .map((m) => (
+                            <AprendizCard key={m.id} m={m}
+
+                                extraContent={
+                                    <>
+                                        <div className="card-cupos-row">
+                                            <IconPersonas />
+                                            <span className="card-cupos">
+                                                {m.cuposDisponibles} / {m.cupo} cupos disponibles
+                                            </span>
+                                        </div>
+                                        <TemaInput
+                                            onConfirmar={(tema) => handleConfirmar(m, tema)}
+                                            sinCupos={m.cuposDisponibles <= 0}
+                                        />                                </>
+                                }
+                            />
+                        ))}
                 </div>
             )}
         </div>

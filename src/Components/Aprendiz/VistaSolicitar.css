@@ -1,26 +1,206 @@
-.tema-input-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-top: 8px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+.card-aprendiz-figma {
+    background: #FFFFFF;
+    border-radius: 18px;
+    position: relative;
+    padding-left: 6px; /* Espacio para la barra lateral */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #E2E8F0;
+    overflow: hidden;
+    min-width: 300px;
+    max-width: 350px;
 }
 
-.tema-error {
-    color: #d9534f;
-    font-size: 0.75rem;
-    margin-top: -2px;
+/* Barra lateral de color */
+.card-aprendiz-figma::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15px;
+    bottom: 15px;
+    width: 5px;
+    border-radius: 0 4px 4px 0;
+}
+
+.card-aprendiz-figma.disponible::before { background-color: #E91E63; }
+.card-aprendiz-figma.lleno::before { background-color: #94A3B8; }
+
+.card-inner {
+    padding: 18px 20px;
+}
+
+/* Header Meta */
+.header-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.email-text {
+    font-size: 10px;
+    color: #64748B;
+    text-decoration: underline;
+}
+
+.date-text {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+/* Fila Principal */
+.main-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.mentor-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0;
+}
+
+.occupancy-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+.divider-line {
+    height: 1px;
+    background: #F1F5F9;
+    margin-bottom: 12px;
+}
+
+/* Materia */
+.label-caption {
+    font-size: 11px;
+    color: #64748B;
+    display: block;
+}
+
+.subject-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #132D63;
+    margin: 2px 0 12px 0;
+}
+
+/* Área de Input */
+.input-container-figma {
+    margin-bottom: 15px;
+}
+
+/* Este es el estilo para el input que pases por extraContent */
+.input-container-figma input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 13px;
+    outline: none;
+}
+
+/* Footer */
+.card-footer-figma {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.footer-icon-text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #64748B;
+    margin-bottom: 2px;
+}
+
+.btn-confirmar-figma {
+    background-color: #132D63;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-confirmar-figma:hover {
+    background-color: #1a3a7a;
+}
+
+.mentor-email {
+    text-decoration: underline;
+}
+
+.mentor-name-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+.cupo-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #1E293B;
+}
+
+/* DIVIDER */
+.card-divider {
+    border: none;
+    border-top: 1px solid #E2E8F0;
+    margin: 5px 0;
+}
+
+/* MATERIA */
+.materia-section .label-small {
+    font-size: 11px;
+    color: #64748B;
+}
+
+.materia-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #132D63;
+}
+
+/* INPUT */
+.solicitud-tema-input {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    font-size: 12px;
+    outline: none;
+}
+
+.confirmar-btn:hover {
+    opacity: 0.9;
 }
 
 .card-cupos-row {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-size: 12px;
-    font-weight: 600;
-    color: var(--text-mid);
-    margin-bottom: 4px;
+    color: #1E293B;
+    margin: 6px 0;
 }
 
-.card-agenda {
-    border-left: 4px solid #e91e8c; /* por defecto: pendiente */
-}
+
