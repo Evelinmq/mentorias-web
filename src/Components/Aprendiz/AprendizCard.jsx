@@ -2,21 +2,21 @@
 import React from "react";
 
 const IconAula = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
         <circle cx="12" cy="10" r="3" />
     </svg>
 );
 
 const IconHora = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <polyline points="12 6 12 12 16 14" />
     </svg>
 );
 
 const IconPersonas = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
         <circle cx="9" cy="7" r="4" />
         <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -24,62 +24,113 @@ const IconPersonas = () => (
     </svg>
 );
 
-const AprendizCard = ({ m, extraContent }) => {
-    // Formatear fecha a DD/MM/AAAA si viene como YYYY-MM-DD
+
+const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
     const formatearFecha = (fechaStr) => {
-        if(!fechaStr) return "";
-        const [y, m, d] = fechaStr.split('-');
-        return `${d}/${m}/${y}`;
+        if (!fechaStr) return "";
+        const [y, mo, d] = fechaStr.split("-");
+        return `${d}/${mo}/${y}`;
     };
 
+    const estatus = m?.estatus === "confirmada" ? "confirmada" : "por-aceptar";
+    const isAgendada = variant === "agendada";
+
+    const accentClass = isAgendada
+        ? estatus === "confirmada"
+            ? "aprendiz-card__accent--confirmada"
+            : "aprendiz-card__accent--por-aceptar"
+        : "aprendiz-card__accent--solicitar";
+
+    const mentorNombre = m?.mentor?.nombre || "";
+    const iniciales = mentorNombre.charAt(0).toUpperCase() || "M";
+
     return (
-        <div className="card-agenda-custom">
-            {/* Línea lateral de color */}
-            <div className="card-status-sidebar"></div>
+        <div className={`aprendiz-card ${isAgendada ? "aprendiz-card--agendada" : ""}`}>
+            <div className={`aprendiz-card__accent ${accentClass}`} />
 
-            <div className="card-content-wrapper">
-                {/* Header: Email y Fecha */}
-                <div className="card-header-top">
-                    <span className="mentor-email">{m?.mentor?.correo || "usuario@utez.edu.mx"}</span>
-                    <span className="fecha-top">{formatearFecha(m?.fecha)}</span>
-                </div>
-
-                {/* Nombre del Mentor y Cupo al mismo nivel */}
-                <div className="card-row-principal">
-                    <h2 className="mentor-name-title">
-                        {m?.mentor ? `${m.mentor.nombre} ${m.mentor.apellidoP}` : "Sin nombre"}
-                    </h2>
-                    <div className="cupo-indicator">
-                        <IconPersonas />
-                        <span>{m?.inscritos || 0}/{m?.cupo || 5}</span>
+            <div className="aprendiz-card__body">
+                {/* Header: email + fecha + punto de status */}
+                <div className="aprendiz-card__header">
+                    <span className="aprendiz-card__email">
+                        {m?.mentor?.correo || "usuario@utez.edu.mx"}
+                    </span>
+                    <div className="aprendiz-card__header-right">
+                        <span className="aprendiz-card__fecha">
+                            {formatearFecha(m?.fecha)}
+                        </span>
+                        {isAgendada && (
+                            <span className={`aprendiz-card__status-dot aprendiz-card__status-dot--${estatus}`} />
+                        )}
                     </div>
                 </div>
 
-                <hr className="card-divider" />
-
-                {/* Materia */}
-                <div className="materia-section">
-                    <p className="label-small">Materia:</p>
-                    <h3 className="materia-name">{m?.materia?.nombre || "Sin Materia"}</h3>
+                {/* Nombre + cupo */}
+                <div className="aprendiz-card__principal">
+                    <h2 className="aprendiz-card__nombre">
+                        {m?.mentor
+                            ? `${m.mentor.nombre} ${m.mentor.apellidoP}`
+                            : "Sin nombre"}
+                    </h2>
+                    {!isAgendada && (
+                        <div className="aprendiz-card__cupo">
+                            <IconPersonas />
+                            <span>{m?.inscritos || 0}/{m?.cupo || 5}</span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Espacio para el Input (TemaInput) */}
-                {extraContent && (
-                    <div className="extra-content-area">
+                <hr className="aprendiz-card__divider" />
+
+                {/* Materia */}
+                <div className="aprendiz-card__field">
+                    <p className="aprendiz-card__label">Materia:</p>
+                    <span className="aprendiz-card__value">
+                        {m?.materia?.nombre || "Sin Materia"}
+                    </span>
+                </div>
+
+                {isAgendada && m?.tema && (
+                    <div className="aprendiz-card__field">
+                        <p className="aprendiz-card__label">Tema:</p>
+                        <span className="aprendiz-card__value aprendiz-card__value--tema">
+                            {m.tema}
+                        </span>
+                    </div>
+                )}
+
+                {!isAgendada && extraContent && (
+                    <div className="aprendiz-card__input-area">
                         {extraContent}
                     </div>
                 )}
 
-                {/* Footer: Aula y Horario */}
-                <div className="card-footer-info">
-                    <div className="info-item-footer">
-                        <IconAula />
-                        <span>{m?.espacio?.nombre || "Por asignar"}</span>
+                <div className="aprendiz-card__footer">
+                    <div className="aprendiz-card__footer-info">
+                        <div className="aprendiz-card__footer-item">
+                            <IconAula />
+                            <span>{m?.espacio?.nombre || "Por asignar"}</span>
+                        </div>
+                        <div className="aprendiz-card__footer-item">
+                            <IconHora />
+                            <span>
+                                {m?.horaInicio?.slice(0, 5) || "-"} - {m?.horaFin?.slice(0, 5) || ""}
+                            </span>
+                        </div>
                     </div>
-                    <div className="info-item-footer">
-                        <IconHora />
-                        <span>{m?.horaInicio?.slice(0, 5)} - {m?.horaFin?.slice(0, 5)}</span>
-                    </div>
+
+                    {isAgendada && (
+                        <div className="aprendiz-card__avatar">
+                            {m?.mentor?.foto ? (
+                                <img
+                                    src={m.mentor.foto}
+                                    alt={mentorNombre}
+                                    className="aprendiz-card__avatar-img"
+                                />
+                            ) : (
+                                <span className="aprendiz-card__avatar-inicial">{iniciales}</span>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
