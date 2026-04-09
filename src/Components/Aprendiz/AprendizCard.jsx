@@ -24,8 +24,9 @@ const IconPersonas = () => (
     </svg>
 );
 
-
 const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
+    if (!m) return null; // 🔥 PROTECCIÓN TOTAL
+
     const formatearFecha = (fechaStr) => {
         if (!fechaStr) return "";
         const [y, mo, d] = fechaStr.split("-");
@@ -42,14 +43,14 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
         : "aprendiz-card__accent--solicitar";
 
     const mentorNombre = m?.mentor?.nombre || "";
-    const iniciales = mentorNombre.charAt(0).toUpperCase() || "M";
+    const iniciales = mentorNombre ? mentorNombre.charAt(0).toUpperCase() : "M";
 
     return (
         <div className={`aprendiz-card ${isAgendada ? "aprendiz-card--agendada" : ""}`}>
             <div className={`aprendiz-card__accent ${accentClass}`} />
 
             <div className="aprendiz-card__body">
-                {/* Header: email + fecha + punto de status */}
+
                 <div className="aprendiz-card__header">
                     <span className="aprendiz-card__email">
                         {m?.mentor?.correo || "usuario@utez.edu.mx"}
@@ -64,7 +65,6 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
                     </div>
                 </div>
 
-                {/* Nombre + cupo */}
                 <div className="aprendiz-card__principal">
                     <h2 className="aprendiz-card__nombre">
                         {m?.mentor
@@ -81,7 +81,6 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
 
                 <hr className="aprendiz-card__divider" />
 
-                {/* Materia */}
                 <div className="aprendiz-card__field">
                     <p className="aprendiz-card__label">Materia:</p>
                     <span className="aprendiz-card__value">
@@ -110,10 +109,13 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
                             <IconAula />
                             <span>{m?.espacio?.nombre || "Por asignar"}</span>
                         </div>
+
                         <div className="aprendiz-card__footer-item">
                             <IconHora />
                             <span>
-                                {m?.horaInicio?.slice(0, 5) || "-"} - {m?.horaFin?.slice(0, 5) || ""}
+                                {(typeof m?.horaInicio === "string" ? m.horaInicio.slice(0, 5) : "-")}
+                                {" - "}
+                                {(typeof m?.horaFin === "string" ? m.horaFin.slice(0, 5) : "")}
                             </span>
                         </div>
                     </div>
@@ -127,7 +129,9 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
                                     className="aprendiz-card__avatar-img"
                                 />
                             ) : (
-                                <span className="aprendiz-card__avatar-inicial">{iniciales}</span>
+                                <span className="aprendiz-card__avatar-inicial">
+                                    {iniciales}
+                                </span>
                             )}
                         </div>
                     )}

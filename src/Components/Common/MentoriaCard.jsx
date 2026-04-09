@@ -45,6 +45,8 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
         estadoClase = 'aceptadas';
     }
 
+    const temaPrincipal = m.temas?.[0]?.nombre ?? "Sin tema especificado";
+    
     return (
         <div className={`card-agenda ${estadoClase}`}>
             <div className="card-header">
@@ -72,13 +74,8 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
 
                 <div className="detalle-row">
                     <span className="label">Tema:</span>
-                    <span className="valor">
-                        {m.temas?.length > 0
-                            ? m.temas[0].nombre
-                            : "Sin tema especificado"}
-                    </span>
+                    <span className="valor">{temaPrincipal}</span>
                 </div>
-
                 <div className="icon-info-grid">
                     <div className="icon-item">
                         <IconAula />

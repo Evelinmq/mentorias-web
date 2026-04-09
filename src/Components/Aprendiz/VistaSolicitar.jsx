@@ -117,7 +117,7 @@ export default function VistaSolicitar() {
     const [mentorias, setMentorias] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("usuario"));
 
     const cargarMentorias = async () => {
         try {
@@ -155,6 +155,14 @@ export default function VistaSolicitar() {
         : mentorias;
 
     const handleConfirmar = async (mentoria, tema) => {
+        const user = JSON.parse(localStorage.getItem("usuario"));
+        const userId = user?.usuario?.id || user?.id;
+
+        if (!userId) {
+            console.error("❌ userId undefined:", user);
+            return;
+        }
+
         const confirmacion = await Swal.fire({
             title: '¿Confirmar mentoría?',
             html: `Mentoría con <b>${mentoria.mentor?.nombre} ${mentoria.mentor?.apellidoP}</b><br/>Tema: <i>"${tema}"</i>`,
@@ -170,21 +178,20 @@ export default function VistaSolicitar() {
             try {
                 await enviarDatos('/api/mentorias-usuarios', {
                     mentoria: { id: mentoria.id },
-                    usuario: { id: user.id }
+                    usuario: { id: userId }
                 });
-                Swal.fire({ title: '¡Solicitud enviada!', icon: 'success', confirmButtonText: 'Entendido' });
+
+                Swal.fire({ title: '¡Solicitud enviada!', icon: 'success' });
                 cargarMentorias();
             } catch (error) {
                 Swal.fire({
                     title: 'Error',
-                    text: error.message || 'No se pudo enviar la solicitud.',
-                    icon: 'error',
-                    confirmButtonText: 'Cerrar'
+                    text: error.message,
+                    icon: 'error'
                 });
             }
         }
     };
-
     if (loading) return <p style={{ padding: '2rem' }}>Cargando mentorías...</p>;
 
     return (
@@ -200,7 +207,7 @@ export default function VistaSolicitar() {
             ) : (
                 <div className="cards-grid">
                     {mentoriasFiltradas
-                        .filter(m => m.mentor && m.mentor.nombre) // Ignora las que no traen mentor real
+                        .filter(m => m && m.mentor && m.id) // 🔥 evita undefined
                         .map((m) => (
                             <AprendizCard key={m.id} m={m}
 

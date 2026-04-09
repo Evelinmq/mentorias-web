@@ -32,37 +32,44 @@ function ModalMentoria({ cerrar, fechaPredefinida, usuario }) {
   const soloTexto = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]+$/;
 
   const alEnviar = async (data) => {
-    try {
-      if (data.horaFin <= data.horaInicio) {
-        await alertaError("La hora fin debe ser mayor a la hora inicio");
-        return;
-      }
-
-      const payload = {
-        fecha: data.fecha,
-        horaInicio: data.horaInicio,
-        horaFin: data.horaFin,
-
-        cuatrimestre: parseInt(data.cuatri),
-        cupo: 5,
-        mentor: { id: usuario.id },
-
-        espacio: { id: parseInt(data.aula) },
-        materia: { id: parseInt(data.materia) }
-      };
-
-      console.log("PAYLOAD:", payload);
-
-      await enviarDatos("/api/mentorias", payload);
-
-      await alertaExito("La mentoría se registró con éxito");
-      cerrar();
-
-    } catch (error) {
-      console.error(error);
-      await alertaError("No se pudo guardar la mentoría");
+  try {
+    if (!usuario?.id) {
+      await alertaError("Usuario no válido");
+      return;
     }
-  };
+
+    if (data.horaFin <= data.horaInicio) {
+      await alertaError("La hora fin debe ser mayor a la hora inicio");
+      return;
+    }
+
+    const formatearHora = (hora) => hora + ":00";
+
+    const payload = {
+      fecha: data.fecha,
+      horaInicio: formatearHora(data.horaInicio),
+      horaFin: formatearHora(data.horaFin),
+
+      cuatrimestre: parseInt(data.cuatri),
+      cupo: 5,
+      mentor: { id: usuario.id },
+
+      espacio: { id: parseInt(data.aula) },
+      materia: { id: parseInt(data.materia) }
+    };
+
+    console.log("PAYLOAD:", payload);
+
+    await enviarDatos("/api/mentorias", payload);
+
+    await alertaExito("La mentoría se registró con éxito");
+    cerrar();
+
+  } catch (error) {
+    console.error(error);
+    await alertaError("No se pudo guardar la mentoría");
+  }
+};
 
   const onError = async () => {
     await alertaCamposVacios();
