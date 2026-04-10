@@ -15,7 +15,6 @@ export default function VistaAgendadas() {
                 const misMentorias = await obtenerDatos(
                     `/api/mentorias-usuarios/usuario/${userId}/detalle`
                 );
-
                 setMentorias(misMentorias);
             } catch (error) {
                 console.error('Error al cargar agendadas:', error);
@@ -54,7 +53,7 @@ export default function VistaAgendadas() {
                         m={{
                             ...m,
                             tema: m.temas?.[0]?.nombre || "Sin tema",
-                            estatus: m.estado?.nombre?.toLowerCase().includes("aceptada")
+                            estatus: m.estado?.nombre === "Aceptada"
                                 ? "confirmada"
                                 : "por-aceptar"
                         }}
