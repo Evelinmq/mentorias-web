@@ -22,9 +22,68 @@ const IconFiltro = () => (
     </svg>
 );
 
-function TemaInput({ onConfirmar, sinCupos }) {  // ← agrega sinCupos
+// ✅ yaInscrito agregado a los parámetros
+function TemaInput({ onConfirmar, sinCupos, temaExistente, yaInscrito }) {
     const [tema, setTema] = useState("");
     const [error, setError] = useState("");
+
+    // 🔒 Ya inscrito — mostrar mensaje, sin botón
+    if (yaInscrito) {
+        return (
+            <div className="tema-input-wrapper">
+                <p style={{
+                    color: '#6b7280',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    textAlign: 'center',
+                    padding: '8px',
+                    backgroundColor: '#f3f4f6',
+                    borderRadius: '6px'
+                }}>
+                    ✓ Ya estás inscrito en esta mentoría
+                </p>
+            </div>
+        );
+    }
+
+    // 🔒 Hay tema pero el usuario no está inscrito — input bloqueado, botón activo
+    if (temaExistente) {
+        return (
+            <div className="input-container-figma">
+                <div className="solicitud-tema-row">
+                    <input
+                        className="solicitud-tema-input"
+                        value={temaExistente}
+                        disabled
+                        style={{
+                            backgroundColor: '#f3f4f6',
+                            color: '#6b7280',
+                            cursor: 'not-allowed'
+                        }}
+                    />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                    <Button
+                        text="Confirmar"
+                        className="btn-confirmar-figma"
+                        disabled={false}
+                        onClick={() => onConfirmar(temaExistente)}
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    // ❌ Sin cupos
+    if (sinCupos) {
+        return (
+            <div className="tema-input-wrapper">
+                <p style={{ color: '#ef4444', fontSize: '13px', fontWeight: 600, textAlign: 'center' }}>
+                    Sin cupos disponibles
+                </p>
+            </div>
+        );
+    }
 
     const handleChange = (e) => {
         const value = e.target.value.trimStart();
@@ -40,45 +99,33 @@ function TemaInput({ onConfirmar, sinCupos }) {  // ← agrega sinCupos
 
     const isValid = tema.trim().length >= 5 && tema.trim().length <= 50;
 
-    const handleConfirmar = () => {
-        if (!isValid) return;
-        onConfirmar(tema);
-        setTema("");
-        setError("");
-    };
-
-    if (sinCupos) {
-        return (
-            <div className="tema-input-wrapper">
-                <p style={{ color: '#ef4444', fontSize: '13px', fontWeight: 600, textAlign: 'center' }}>
-                    Sin cupos disponibles
-                </p>
-            </div>
-        );
-    }
-
     return (
         <div className="input-container-figma">
             <div className="solicitud-tema-row">
                 <input
-
                     className="solicitud-tema-input"
                     placeholder="Proponer tema"
                     value={tema}
                     onChange={handleChange}
                 />
-                {/* El icono "+" que se ve en la imagen */}
                 <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)' }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="black">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
                 </div>
             </div>
-
+            {error && <p style={{ color: '#ef4444', fontSize: '12px', marginTop: '4px' }}>{error}</p>}
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
                 <Button
                     text="Confirmar"
                     className="btn-confirmar-figma"
                     disabled={!isValid}
-                    onClick={handleConfirmar}
+                    onClick={() => {
+                        if (!isValid) return;
+                        onConfirmar(tema);
+                        setTema("");
+                        setError("");
+                    }}
                 />
             </div>
         </div>
@@ -95,14 +142,18 @@ function FiltroMateria({ materias, seleccionada, onChange }) {
             </button>
             {abierto && (
                 <ul className="dropdown-list">
-                    <li className={`dropdown-item ${seleccionada === null ? "selected" : ""}`}
-                        onClick={() => { onChange(null); setAbierto(false); }}>
+                    <li
+                        className={`dropdown-item ${seleccionada === null ? "selected" : ""}`}
+                        onClick={() => { onChange(null); setAbierto(false); }}
+                    >
                         Todas las materias
                     </li>
                     {materias.map((m) => (
-                        <li key={m}
+                        <li
+                            key={m}
                             className={`dropdown-item ${seleccionada === m ? "selected" : ""}`}
-                            onClick={() => { onChange(m); setAbierto(false); }}>
+                            onClick={() => { onChange(m); setAbierto(false); }}
+                        >
                             {m}
                         </li>
                     ))}
@@ -113,30 +164,29 @@ function FiltroMateria({ materias, seleccionada, onChange }) {
 }
 
 export default function VistaSolicitar() {
-    const [filtro, setFiltro] = useState(null);
+    const [filtroSeleccionado, setFiltroSeleccionado] = useState(null);
     const [mentorias, setMentorias] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const user = JSON.parse(localStorage.getItem("usuario"));
 
     const cargarMentorias = async () => {
         try {
             setLoading(true);
-            const [mentorias, inscripciones] = await Promise.all([
+            const user = JSON.parse(localStorage.getItem("usuario"));
+            const userId = user?.usuario?.id || user?.id;
+
+            const [listaMentorias, conteo, misIds] = await Promise.all([
                 obtenerDatos('/api/mentorias/proximas'),
-                obtenerDatos('/api/mentorias-usuarios')
+                obtenerDatos('/api/mentorias-usuarios/conteo'),
+                obtenerDatos(`/api/mentorias-usuarios/usuario/${userId}`)
             ]);
 
-            const conteoPorMentoria = inscripciones.reduce((acc, i) => {
-                const id = i.mentoria?.id;
-                acc[id] = (acc[id] || 0) + 1;
-                return acc;
-            }, {});
+            const yaInscritoSet = new Set(misIds);
 
-            const mentoriasConCupos = mentorias.map(m => ({
+            const mentoriasConCupos = listaMentorias.map(m => ({
                 ...m,
-                inscritos: conteoPorMentoria[m.id] || 0,
-                cuposDisponibles: m.cupo - (conteoPorMentoria[m.id] || 0)
+                inscritos: conteo[m.id] || 0,
+                cuposDisponibles: m.cupo - (conteo[m.id] || 0),
+                yaInscrito: yaInscritoSet.has(m.id)
             }));
 
             setMentorias(mentoriasConCupos);
@@ -150,8 +200,9 @@ export default function VistaSolicitar() {
     useEffect(() => { cargarMentorias(); }, []);
 
     const materias = [...new Set(mentorias.map((m) => m.materia?.nombre).filter(Boolean))];
-    const mentoriasFiltradas = filtro
-        ? mentorias.filter((m) => m.materia?.nombre === filtro)
+
+    const mentoriasFiltradas = filtroSeleccionado
+        ? mentorias.filter((m) => m.materia?.nombre === filtroSeleccionado)
         : mentorias;
 
     const handleConfirmar = async (mentoria, tema) => {
@@ -176,10 +227,13 @@ export default function VistaSolicitar() {
 
         if (confirmacion.isConfirmed) {
             try {
-                await enviarDatos('/api/mentorias-usuarios', {
-                    mentoria: { id: mentoria.id },
-                    usuario: { id: userId }
-                });
+                await enviarDatos(
+                    `/api/mentorias-usuarios?tema=${encodeURIComponent(tema)}`,
+                    {
+                        mentoria: { id: mentoria.id },
+                        usuario: { id: userId }
+                    }
+                );
 
                 Swal.fire({ title: '¡Solicitud enviada!', icon: 'success' });
                 cargarMentorias();
@@ -192,12 +246,17 @@ export default function VistaSolicitar() {
             }
         }
     };
+
     if (loading) return <p style={{ padding: '2rem' }}>Cargando mentorías...</p>;
 
     return (
         <div className="solicitud-view">
             <div className="solicitud-filtro">
-                <FiltroMateria materias={materias} seleccionada={filtro} onChange={setFiltro} />
+                <FiltroMateria
+                    materias={materias}
+                    seleccionada={filtroSeleccionado}
+                    onChange={setFiltroSeleccionado}
+                />
             </div>
 
             {mentoriasFiltradas.length === 0 ? (
@@ -207,10 +266,11 @@ export default function VistaSolicitar() {
             ) : (
                 <div className="cards-grid">
                     {mentoriasFiltradas
-                        .filter(m => m && m.mentor && m.id) // 🔥 evita undefined
+                        .filter(m => m && m.mentor && m.id)
                         .map((m) => (
-                            <AprendizCard key={m.id} m={m}
-
+                            <AprendizCard
+                                key={m.id}
+                                m={m}
                                 extraContent={
                                     <>
                                         <div className="card-cupos-row">
@@ -222,7 +282,10 @@ export default function VistaSolicitar() {
                                         <TemaInput
                                             onConfirmar={(tema) => handleConfirmar(m, tema)}
                                             sinCupos={m.cuposDisponibles <= 0}
-                                        />                                </>
+                                            temaExistente={m.temas?.[0]?.nombre || null}
+                                            yaInscrito={m.yaInscrito}
+                                        />
+                                    </>
                                 }
                             />
                         ))}

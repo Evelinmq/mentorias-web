@@ -58,7 +58,7 @@ export default function VistaHistorial() {
 
             <div className="cards-grid">
                 {historial
-                    .filter(i => i.mentoria) // 🔥 ESTA LÍNEA ES CLAVE
+                    .filter(i => i.mentoria) 
                     .map((inscripcion) => (
                         <AprendizCard
                             key={inscripcion.id}
