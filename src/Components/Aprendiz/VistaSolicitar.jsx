@@ -22,12 +22,10 @@ const IconFiltro = () => (
     </svg>
 );
 
-// ✅ yaInscrito agregado a los parámetros
 function TemaInput({ onConfirmar, sinCupos, temaExistente, yaInscrito }) {
     const [tema, setTema] = useState("");
     const [error, setError] = useState("");
 
-    // 🔒 Ya inscrito — mostrar mensaje, sin botón
     if (yaInscrito) {
         return (
             <div className="tema-input-wrapper">
@@ -46,7 +44,6 @@ function TemaInput({ onConfirmar, sinCupos, temaExistente, yaInscrito }) {
         );
     }
 
-    // 🔒 Hay tema pero el usuario no está inscrito — input bloqueado, botón activo
     if (temaExistente) {
         return (
             <div className="input-container-figma">
@@ -74,7 +71,6 @@ function TemaInput({ onConfirmar, sinCupos, temaExistente, yaInscrito }) {
         );
     }
 
-    // ❌ Sin cupos
     if (sinCupos) {
         return (
             <div className="tema-input-wrapper">
@@ -274,10 +270,6 @@ export default function VistaSolicitar() {
                                 extraContent={
                                     <>
                                         <div className="card-cupos-row">
-                                            <IconPersonas />
-                                            <span className="card-cupos">
-                                                {m.cuposDisponibles} / {m.cupo} cupos disponibles
-                                            </span>
                                         </div>
                                         <TemaInput
                                             onConfirmar={(tema) => handleConfirmar(m, tema)}
