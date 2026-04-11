@@ -56,24 +56,24 @@ const MentoriaCard = ({ m, onAceptar, onCancelar, edificios }) => {
     }
 
 
-   const handleAceptarClick = async () => {
-   
-    const confirmado = await confirmaAsesoria();
-    
-  
-    if (confirmado) {
-        onAceptar(m.id);
-    }
-};
+    const handleAceptarClick = async () => {
 
-const handleCancelarClick = async () => {
-   
-    const confirmado = await confirmaCancelar();
-    
-    if (confirmado) {
-        onCancelar(m.id);
-    }
-};
+        const confirmado = await confirmaAsesoria();
+
+
+        if (confirmado) {
+            onAceptar(m.id);
+        }
+    };
+
+    const handleCancelarClick = async () => {
+
+        const confirmado = await confirmaCancelar();
+
+        if (confirmado) {
+            onCancelar(m.id);
+        }
+    };
     const temaPrincipal = m.temas?.[0]?.nombre ?? "Sin tema especificado";
 
     console.log("EDIFICIOS:", edificios);
@@ -101,27 +101,27 @@ const handleCancelarClick = async () => {
 
                     <div>
                         <div className="cupo-container"></div>
-                        <span className="label">Cupo:</span>
+                        <span className="label">Alumnos:</span>
                         <span className="valor"> {alumnosActuales}/{cupo}</span>
                     </div>
                 </div>
 
                 {alumnosActuales > 0 && (
-    <div className="alumnos-seccion">
-        <p className="label">Alumnos inscritos:</p>
-        <div className="alumnos-lista">
-            {m.alumnos.map((item, index) => (
-                <div key={item.id || index} className="alumno-item">
-                    <span className="valor">
-                        {item.usuario?.nombre} {item.usuario?.apellidoP} {item.usuario?.apellidoM}
-                    </span>
-                </div>
-            ))}
-        </div>
-    </div>
-)}
+                    <div className="alumnos-seccion">
+                        <p className="label">Alumnos inscritos:</p>
+                        <div className="alumnos-lista">
+                            {m.alumnos.map((item, index) => (
+                                <div key={item.id || index} className="alumno-item">
+                                    <span className="valor">
+                                        {item.usuario?.nombre} {item.usuario?.apellidoP} {item.usuario?.apellidoM}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
-                
+
 
                 <div className="detalle-row">
                     <span className="label">Tema:</span>
@@ -131,9 +131,9 @@ const handleCancelarClick = async () => {
                     <div className="icon-item">
                         <IconAula />
                         <span>
-                          {edificio
-                              ? `${edificio.nombre} - ${m.espacio?.nombre}`
-                              : m.espacio?.nombre || "Por asignar"}
+                            {edificio
+                                ? `${edificio.nombre} - ${m.espacio?.nombre}`
+                                : m.espacio?.nombre || "Por asignar"}
                         </span>
                     </div>
                     <div className="icon-item">
@@ -159,7 +159,7 @@ const handleCancelarClick = async () => {
                                 {estadoClase === 'pendientes' && !cupoLleno && (
                                     <button
                                         className="btn-aceptar"
-                                         onClick={handleAceptarClick}
+                                        onClick={handleAceptarClick}
                                     >
                                         Aceptar
                                     </button>

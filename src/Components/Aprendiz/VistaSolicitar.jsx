@@ -235,7 +235,11 @@ export default function VistaSolicitar() {
                     }
                 );
 
-                Swal.fire({ title: '¡Solicitud enviada!', icon: 'success' });
+                Swal.fire({
+                    title: '¡Solicitud enviada!',
+                    icon: 'success',
+                    confirmButtonColor: '#132D63'  
+                });
                 cargarMentorias();
             } catch (error) {
                 Swal.fire({

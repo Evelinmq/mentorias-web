@@ -30,18 +30,20 @@ function CalendarioMentor({ mentorias, onSeleccionarDia }) {
             return tieneMentorias ? <div className="punto"></div> : null;
         }
     };
-    
-    
+
+    const tileDisabled = ({ date }) => {
+        return date.getDay() === 0;
+    };
+
+
 
     return (
-
         <Calendar
             onChange={manejarCambio}
             value={fecha}
             tileContent={tileContent}
-            //minDate={new Date()} 
+            tileDisabled={tileDisabled}   
         />
-        
     );
 }
 
