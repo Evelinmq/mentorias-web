@@ -2,6 +2,13 @@
   padding: 20px;
 }
 
+.usuarios-container .header-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 15px;
+  height: 45px;
+}
+
 .usuarios-header {
   display: flex;
   justify-content: space-between;
@@ -18,22 +25,12 @@
 .btn-agregar {
   background-color: #132D63;
   color: #fff;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 12px;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 /* Botón Pendientes */
 .btn-pendientes {
   background-color: #d1d5db;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
   color: #132D63;
-  padding: 10px 25px;
-  border-radius: 12px;
 }
 
 .btn-pendientes.activo {
@@ -44,6 +41,24 @@
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.usuarios-container .btn-agregar,
+.usuarios-container .btn-pendientes {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  height: 40px !important;
+  padding: 0 25px !important;
+
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 /* Filtro Dropdown */
