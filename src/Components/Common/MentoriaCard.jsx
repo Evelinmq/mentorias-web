@@ -67,10 +67,26 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
                     </div>
 
                     <div>
-                        <span className="label">Alumnos:</span>
+                        <div className="cupo-container"></div>
+                        <span className="label">Cupo:</span>
                         <span className="valor"> {alumnosActuales}/{cupo}</span>
                     </div>
                 </div>
+
+                {alumnosActuales > 0 && (
+    <div className="alumnos-seccion">
+        <p className="label">Alumnos inscritos:</p>
+        <div className="valor-alumnos">
+            {m.alumnos.map((item, index) => (
+                <span key={item.id || index} className="valor">
+                    {item.usuario?.nombre} {item.usuario?.apellidoP}
+                </span>
+            ))}
+        </div>
+    </div>
+)}
+
+                
 
                 <div className="detalle-row">
                     <span className="label">Tema:</span>
