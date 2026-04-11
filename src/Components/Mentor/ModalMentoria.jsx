@@ -79,6 +79,9 @@ function ModalMentoria({ cerrar, fechaPredefinida, usuario }) {
   const [cuatrimestres, setCuatrimestres] = useState([]);
   const [materias, setMaterias] = useState([]);
   const [aulas, setAulas] = useState([]);
+  const [aulasFiltradas, setAulasFiltradas] = useState([]);
+
+  const edificioSeleccionado = watch("edificio");
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -103,6 +106,25 @@ function ModalMentoria({ cerrar, fechaPredefinida, usuario }) {
 
     cargarDatos();
   }, []);
+
+  useEffect(() => {
+    if (!edificioSeleccionado) {
+      setAulasFiltradas([]);
+      return;
+    }
+
+    const edificio = edificios.find(
+        (e) => String(e.id) === String(edificioSeleccionado)
+    );
+
+    if (edificio && edificio.espacios) {
+      setAulasFiltradas(edificio.espacios);
+    } else {
+      setAulasFiltradas([]);
+    }
+  }, [edificioSeleccionado, edificios]);
+
+
   const horaInicioActu = watch("horaInicio");
   return (
     <div className="modal-overlay">
@@ -202,9 +224,16 @@ function ModalMentoria({ cerrar, fechaPredefinida, usuario }) {
 
               <div className="form-group">
                 <label>Aula</label>
-                <select {...register("aula", { required: true })}>
-                  <option value="">Selecciona</option>
-                  {aulas.map((a) => (
+                <select {...register("aula", { required: true })}
+                        disabled={!edificioSeleccionado}>
+                  <option value="">
+                    {!edificioSeleccionado
+                        ? "Primero selecciona edificio"
+                        : aulasFiltradas.length === 0
+                            ? "No hay aulas"
+                            : "Selecciona"}
+                  </option>
+                  {aulasFiltradas.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.nombre}
                     </option>
