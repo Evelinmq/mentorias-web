@@ -106,3 +106,37 @@ export const confirmarRechazarSolicitud = async () => {
 // import { ... } from "../../utils/alerts";
 
 //Los estilos css para las alertas se encuentran dentro de App.css
+
+
+export const confirmaAsesoria = async () => {
+  return await Swal.fire({
+    title: "¿Quieres aceptar la solicitud?",
+    text: "El alumno podrá asistir a la asesoría",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      confirmButton: "swal-confirm-btn",
+      cancelButton: "swal-cancel-btn"
+    },
+    buttonsStyling: false
+  }).then(result => result.isConfirmed);
+};
+
+
+export const confirmaCancelar = async () => {
+  return await Swal.fire({
+    title: "¿Quieres cancelar la solicitud?",
+    text: "El alumno no podrá asistir a la asesoría",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+    cancelButtonText: "Cancelar",
+    customClass: {
+      confirmButton: "swal-confirm-btn",
+      cancelButton: "swal-cancel-btn"
+    },
+    buttonsStyling: false
+  }).then(result => result.isConfirmed);
+};

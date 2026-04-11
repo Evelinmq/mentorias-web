@@ -1,4 +1,6 @@
+import { confirmaCancelar, confirmaAsesoria } from "../../utils/alerts";
 import React from "react";
+
 
 // Iconos 
 const IconAula = () => (
@@ -45,6 +47,25 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
         estadoClase = 'aceptadas';
     }
 
+
+   const handleAceptarClick = async () => {
+   
+    const confirmado = await confirmaAsesoria();
+    
+  
+    if (confirmado) {
+        onAceptar(m.id);
+    }
+};
+
+const handleCancelarClick = async () => {
+   
+    const confirmado = await confirmaCancelar();
+    
+    if (confirmado) {
+        onCancelar(m.id);
+    }
+};
     const temaPrincipal = m.temas?.[0]?.nombre ?? "Sin tema especificado";
     
     return (
@@ -76,7 +97,7 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
                 {alumnosActuales > 0 && (
     <div className="alumnos-seccion">
         <p className="label">Alumnos inscritos:</p>
-        <div className="valor-alumnos">
+        <div className="alumnos-lista">
             {m.alumnos.map((item, index) => (
                 <span key={item.id || index} className="valor">
                     {item.usuario?.nombre} {item.usuario?.apellidoP}
@@ -120,7 +141,7 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
                                 {estadoClase === 'pendientes' && !cupoLleno && (
                                     <button
                                         className="btn-aceptar"
-                                        onClick={() => onAceptar(m.id)}
+                                         onClick={handleAceptarClick}
                                     >
                                         Aceptar
                                     </button>
@@ -129,7 +150,7 @@ const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
                                 {!cupoLleno && (
                                     <button
                                         className="btn-cancelar-agenda"
-                                        onClick={() => onCancelar(m.id)}
+                                        onClick={handleCancelarClick}
                                     >
                                         {estadoClase === 'sin-alumnos'
                                             ? 'Eliminar'
