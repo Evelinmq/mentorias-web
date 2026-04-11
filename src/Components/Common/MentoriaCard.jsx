@@ -19,13 +19,21 @@ const IconHora = () => (
     </svg>
 );
 
-const MentoriaCard = ({ m, onAceptar, onCancelar }) => {
+
+
+const MentoriaCard = ({ m, onAceptar, onCancelar, edificios }) => {
 
     const mentor = m.mentor;
 
     const alumnosActuales = m.alumnos?.length || 0;
     const cupo = m.cupo ?? 5;
     const cupoLleno = alumnosActuales >= cupo;
+    const edificio = Array.isArray(edificios)
+        ? edificios.find(ed =>
+            Array.isArray(ed.espacios) &&
+            ed.espacios.some(e => e.id === m.espacio?.id)
+        )
+        : null;
 
     const estadoNombre = m.estado?.nombre?.toLowerCase() || '';
 
@@ -67,7 +75,11 @@ const handleCancelarClick = async () => {
     }
 };
     const temaPrincipal = m.temas?.[0]?.nombre ?? "Sin tema especificado";
-    
+
+    console.log("EDIFICIOS:", edificios);
+    console.log("ESPACIO:", m.espacio);
+
+
     return (
         <div className={`card-agenda ${estadoClase}`}>
             <div className="card-header">
@@ -77,7 +89,7 @@ const handleCancelarClick = async () => {
 
             <div className="card-body">
                 <div className="info-principal">
-                    <h4>{mentor?.nombre}</h4>
+                    <h4>{mentor?.nombre} {mentor?.apellidoP} {mentor?.apellidoM}</h4>
                     <span className={`status-dot ${estadoClase}`}></span>
                 </div>
 
@@ -99,9 +111,11 @@ const handleCancelarClick = async () => {
         <p className="label">Alumnos inscritos:</p>
         <div className="alumnos-lista">
             {m.alumnos.map((item, index) => (
-                <span key={item.id || index} className="valor">
-                    {item.usuario?.nombre} {item.usuario?.apellidoP}
-                </span>
+                <div key={item.id || index} className="alumno-item">
+                    <span className="valor">
+                        {item.usuario?.nombre} {item.usuario?.apellidoP} {item.usuario?.apellidoM}
+                    </span>
+                </div>
             ))}
         </div>
     </div>
@@ -116,7 +130,11 @@ const handleCancelarClick = async () => {
                 <div className="icon-info-grid">
                     <div className="icon-item">
                         <IconAula />
-                        <span>{m.espacio?.nombre || "Por asignar"}</span>
+                        <span>
+                          {edificio
+                              ? `${edificio.nombre} - ${m.espacio?.nombre}`
+                              : m.espacio?.nombre || "Por asignar"}
+                        </span>
                     </div>
                     <div className="icon-item">
                         <IconHora />

@@ -163,6 +163,7 @@ export default function VistaSolicitar() {
     const [filtroSeleccionado, setFiltroSeleccionado] = useState(null);
     const [mentorias, setMentorias] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [edificios, setEdificios] = useState([]);
 
     const cargarMentorias = async () => {
         try {
@@ -170,11 +171,14 @@ export default function VistaSolicitar() {
             const user = JSON.parse(localStorage.getItem("usuario"));
             const userId = user?.usuario?.id || user?.id;
 
-            const [listaMentorias, conteo, misIds] = await Promise.all([
+            const [listaMentorias, conteo, misIds, ed] = await Promise.all([
                 obtenerDatos('/api/mentorias/proximas'),
                 obtenerDatos('/api/mentorias-usuarios/conteo'),
-                obtenerDatos(`/api/mentorias-usuarios/usuario/${userId}`)
+                obtenerDatos(`/api/mentorias-usuarios/usuario/${userId}`),
+                obtenerDatos('/api/edificios')
             ]);
+
+            setEdificios(ed);
 
             const yaInscritoSet = new Set(misIds);
 
@@ -206,7 +210,7 @@ export default function VistaSolicitar() {
         const userId = user?.usuario?.id || user?.id;
 
         if (!userId) {
-            console.error("❌ userId undefined:", user);
+            console.error("userId undefined:", user);
             return;
         }
 
@@ -267,6 +271,7 @@ export default function VistaSolicitar() {
                             <AprendizCard
                                 key={m.id}
                                 m={m}
+                                edificios={edificios}
                                 extraContent={
                                     <>
                                         <div className="card-cupos-row">

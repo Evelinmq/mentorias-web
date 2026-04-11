@@ -24,7 +24,7 @@ const IconPersonas = () => (
     </svg>
 );
 
-const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
+const AprendizCard = ({ m, extraContent, variant = "solicitar", edificios }) => {
     if (!m) return null; // 🔥 PROTECCIÓN TOTAL
 
     const formatearFecha = (fechaStr) => {
@@ -44,6 +44,13 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
 
     const mentorNombre = m?.mentor?.nombre || "";
     const iniciales = mentorNombre ? mentorNombre.charAt(0).toUpperCase() : "M";
+
+    const edificio = Array.isArray(edificios)
+        ? edificios.find(ed =>
+            Array.isArray(ed.espacios) &&
+            ed.espacios.some(e => e.id === m?.espacio?.id)
+        )
+        : null;
 
     return (
         <div className={`aprendiz-card ${isAgendada ? "aprendiz-card--agendada" : ""}`}>
@@ -107,7 +114,11 @@ const AprendizCard = ({ m, extraContent, variant = "solicitar" }) => {
                     <div className="aprendiz-card__footer-info">
                         <div className="aprendiz-card__footer-item">
                             <IconAula />
-                            <span>{m?.espacio?.nombre || "Por asignar"}</span>
+                            <span>
+                                {edificio
+                                    ? `${edificio.nombre} - ${m?.espacio?.nombre}`
+                                    : m?.espacio?.nombre || "Por asignar"}
+                            </span>
                         </div>
 
                         <div className="aprendiz-card__footer-item">

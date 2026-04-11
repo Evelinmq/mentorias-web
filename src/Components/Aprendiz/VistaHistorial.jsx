@@ -5,6 +5,7 @@ import { obtenerDatos } from "../../utils/api";
 export default function VistaHistorial() {
     const [historial, setHistorial] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [edificios, setEdificios] = useState([]);
 
     useEffect(() => {
         const cargar = async () => {
@@ -14,10 +15,13 @@ export default function VistaHistorial() {
 
                 if (!userId) return;
 
-                const data = await obtenerDatos(
-                    `/api/mentorias-usuarios/usuario/${userId}/historial`
-                );
+                const [data, ed] = await Promise.all([
+                    obtenerDatos(`/api/mentorias-usuarios/usuario/${userId}/historial`),
+                    obtenerDatos("/api/edificios")
+                ]);
+
                 setHistorial(data);
+                setEdificios(ed);
             } catch (error) {
                 console.error('Error al cargar historial:', error);
             } finally {
@@ -59,6 +63,7 @@ export default function VistaHistorial() {
                                 ? "por-aceptar"
                                 : "confirmada"
                         }}
+                        edificios={edificios}
                         variant="agendada"
                     />
                 ))}

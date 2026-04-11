@@ -5,6 +5,7 @@ import { obtenerDatos } from "../../utils/api";
 export default function VistaAgendadas() {
     const [mentorias, setMentorias] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [edificios, setEdificios] = useState([]);
 
     useEffect(() => {
         const cargar = async () => {
@@ -12,10 +13,13 @@ export default function VistaAgendadas() {
                 const user = JSON.parse(localStorage.getItem("usuario"));
                 const userId = user?.usuario?.id || user?.id;
 
-                const misMentorias = await obtenerDatos(
-                    `/api/mentorias-usuarios/usuario/${userId}/detalle`
-                );
+                const [misMentorias, ed] = await Promise.all([
+                    obtenerDatos(`/api/mentorias-usuarios/usuario/${userId}/detalle`),
+                    obtenerDatos("/api/edificios")
+                ]);
                 setMentorias(misMentorias);
+                setEdificios(ed);
+
             } catch (error) {
                 console.error('Error al cargar agendadas:', error);
             } finally {
@@ -57,6 +61,7 @@ export default function VistaAgendadas() {
                                 ? "confirmada"
                                 : "por-aceptar"
                         }}
+                        edificios={edificios}
                         variant="agendada"
                     />
                 ))}

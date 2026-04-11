@@ -1,4 +1,6 @@
 import MentoriaCard from "../Common/MentoriaCard";
+import { useEffect, useState } from "react";
+import { obtenerDatos } from "../../utils/api";
 
 function AgendaMentor({ mentorias, diaSeleccionado, onAceptar, onCancelar }) {
   const fechaSeleccionada = diaSeleccionado
@@ -6,6 +8,20 @@ function AgendaMentor({ mentorias, diaSeleccionado, onAceptar, onCancelar }) {
     : null;
 
   const mentoriasDelDia = mentorias.filter((m) => m.fecha === fechaSeleccionada);
+  const [edificios, setEdificios] = useState([]);
+
+  useEffect(() => {
+    const cargarEdificios = async () => {
+      try {
+        const data = await obtenerDatos("/api/edificios");
+        setEdificios(data);
+      } catch (error) {
+        console.error("Error cargando edificios:", error);
+      }
+    };
+
+    cargarEdificios();
+  }, []);
 
   return (
     <div className="agenda-container">
@@ -16,6 +32,7 @@ function AgendaMentor({ mentorias, diaSeleccionado, onAceptar, onCancelar }) {
           <MentoriaCard
             key={m.id}
             m={m}
+            edificios={edificios}
             onAceptar={onAceptar}
             onCancelar={onCancelar}
           />
