@@ -70,3 +70,24 @@ body {
   font-weight: 600;
   margin: 0 8px;
 }
+
+* {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+table,
+th,
+td {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+
+h1, h2, h3, h4, .header-title {
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 600;
+}
