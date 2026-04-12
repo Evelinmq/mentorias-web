@@ -86,8 +86,26 @@ const VistaUsuarios = () => {
         register,
         handleSubmit,
         reset,
+        watch,
+        setValue,
         formState: { errors, isDirty }
     } = useForm();
+
+    const rolesSeleccionados = watch("rolesIds") || [];
+
+    useEffect(() => {
+        if (rolesSeleccionados.length > 1) {
+            const ultimoSeleccionado = rolesSeleccionados[rolesSeleccionados.length - 1];
+
+            if (ultimoSeleccionado === "1") {
+                setValue("rolesIds", ["1"]);
+            }
+
+            else if ((ultimoSeleccionado === "2" || ultimoSeleccionado === "3") && rolesSeleccionados.includes("1")) {
+                setValue("rolesIds", rolesSeleccionados.filter(id => id !== "1"));
+            }
+        }
+    }, [rolesSeleccionados, setValue]);
 
     const columnas = useMemo(() => [
         { header: 'Nombre(s)', accessor: 'nombre' },
@@ -220,7 +238,7 @@ const VistaUsuarios = () => {
         }
     };
 
-    // Función que reacciona si react-hook-form detecta campos vacíos
+    //  detecta campos vacíos
     const onErroresValidacion = () => {
         alertaCamposVacios();
     };
@@ -271,7 +289,6 @@ const VistaUsuarios = () => {
                             {isEditing ? "Editar usuario" : "Agregar usuario"}
                         </h2>
 
-                        {/* NUEVO: Pasamos onErroresValidacion como segundo parámetro */}
                         <form className='modal-form' onSubmit={handleSubmit(onSubmit, onErroresValidacion)} noValidate>
                             <input type="hidden" {...register("id")} />
 
@@ -288,6 +305,7 @@ const VistaUsuarios = () => {
                                         name="carrera"
                                         rules={{ required: true }}
                                         options={carrerasList}
+                                        placeholder="Carrera"
                                     />
                                 </div>
 
@@ -307,9 +325,9 @@ const VistaUsuarios = () => {
                                         name="rolesIds"
                                         register={register}
                                         options={[
-                                            { value: "1", label: "Administrador" },
-                                            { value: "2", label: "Mentor" },
-                                            { value: "3", label: "Alumno" }
+                                            { value: "1", label: "Administrador"},
+                                            { value: "2", label: "Mentor"},
+                                            { value: "3", label: "Alumno"}
                                         ]}
                                     />
                                 </div>
