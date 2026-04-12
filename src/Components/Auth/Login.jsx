@@ -48,18 +48,12 @@ function Login() {
         body: JSON.stringify({ correo: correo })
       });
 
-      if (response.ok) {
-        alertaExito("Código enviado a tu correo");
+      alertaExito("Recibirás un código en breve.");
 
-        // Mandamos el correo a la siguiente pantalla vía 'state'
-        // Así la pantalla del código sabe a quién le pertenece ese código
-        navigate("/verificar-codigo", { state: { correoDestino: correo } });
-      } else {
-        alertaError("El correo ingresado no está registrado.");
-      }
+      navigate("/verificar-codigo", { state: { correoDestino: correo } });
     } catch (error) {
       console.error("Error:", error);
-      alertaError("Error al conectar con el servidor.");
+      alertaError("Ocurrió un error con el servidor. Intenta más tarde.");
     }
   };
 
