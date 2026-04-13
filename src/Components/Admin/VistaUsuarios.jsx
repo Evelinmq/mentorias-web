@@ -154,7 +154,7 @@ const VistaUsuarios = () => {
             try {
                 await eliminarDatos(`/api/usuarios/${id}`);
                 alertaExito("Usuario rechazado");
-                cargarUsuarios(verPendientes ? 'Pendiente' : 'Activo');
+                cargarUsuarios('Pendiente');
             } catch (error) {
                 console.error(error);
                 alertaError("Error al rechazar la solicitud");
@@ -169,7 +169,8 @@ const VistaUsuarios = () => {
             try {
                 await eliminarDatos(`/api/usuarios/${id}`);
                 alertaExito("Usuario eliminado correctamente");
-                cargarUsuarios(); // Recargamos la tabla
+                const estadoActual = verPendientes ? 'Pendiente' : 'Activo';
+                cargarUsuarios(estadoActual);
             } catch (error) {
                 console.error("Error al eliminar:", error);
                 alertaError("Error al intentar eliminar el usuario");
@@ -211,6 +212,11 @@ const VistaUsuarios = () => {
 
     const handleEstado = async (idUsuario, nuevoEstadoId) => {
         console.log("ENTRÓ A handleEstado", idUsuario, nuevoEstadoId);
+
+        if (nuevoEstadoId === 2) {
+            const confirmado = await confirmarDesactivarUsuario("¿Estás seguro de que deseas desactivar este usuario?");
+            if (!confirmado) return;
+        }
 
         try {
             const response = await fetch('http://localhost:8080/api/usuarios/cambiar-estado', {
