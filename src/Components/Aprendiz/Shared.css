@@ -85,7 +85,7 @@
 }
 
 .dot.confirmada  { background: var(--green); }
-.dot.por-aceptar { background: #555; }
+.dot.por-aceptar { background: #9b9da8; }
 
 /* ── Cards Grid ──────────────────────────────────────────────────────────── */
 .cards-grid {

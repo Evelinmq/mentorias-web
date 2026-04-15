@@ -45,6 +45,9 @@ export default function VistaAgendadas() {
                 <span className="legend-item">
                     <span className="dot confirmada" /> Confirmada
                 </span>
+                <span className="legend-item">
+                    <span className="dot por-aceptar" /> Por aceptar
+                </span>
             
             </div>
 
