@@ -103,17 +103,48 @@ const VistaReportes = () => {
   ];
 
 // la creacion de reportes pdf
-  const handleDescargarReporte = () => {
- 
-  const mentor = filtroMentor || "";
-  const materia = filtroMateria || "";
-  const inicio = fechaInicio || "";
-  const fin = fechaFin || "";
-  
-  const url = `http://localhost:8080/api/reportes/mentorias?mentor=${mentor}&materia=${materia}&fechaInicio=${inicio}&fechaFin=${fin}`;
+  const handleDescargarReporte = async () => {
+    const mentor = filtroMentor || "";
+    const materia = filtroMateria || "";
+    const inicio = fechaInicio || "";
+    const fin = fechaFin || "";
+    
+    const token = localStorage.getItem('token');
 
-  window.open(url, "_blank");
-};
+    const url = `http://localhost:8080/api/reportes/mentorias?mentor=${encodeURIComponent(mentor)}&materia=${encodeURIComponent(materia)}&fechaInicio=${inicio}&fechaFin=${fin}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/pdf'
+        }
+      });
+
+      if (!response.ok) {
+        if(response.status === 403) alert("No tienes permisos de Administrador.");
+        throw new Error("Error al generar el reporte");
+      }
+
+      const blob = await response.blob();
+
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'Reporte_Mentorias.pdf');
+      document.body.appendChild(link);
+      link.click();
+
+      // 5. Limpieza
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+
+    } catch (error) {
+      console.error("Error descargando el reporte:", error);
+      alert("Hubo un problema al descargar el reporte.");
+    }
+  };
 
 
   return (

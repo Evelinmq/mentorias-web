@@ -222,7 +222,8 @@ const VistaUsuarios = () => {
             const response = await fetch('http://localhost:8080/api/usuarios/cambiar-estado', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({
                     id: idUsuario,
