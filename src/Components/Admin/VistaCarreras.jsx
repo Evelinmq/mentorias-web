@@ -22,6 +22,7 @@ const VistaCarreras = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
 
@@ -62,10 +63,14 @@ const VistaCarreras = () => {
 
   const cargarCarreras = async () => {
     try {
+        setLoading(true);
+        setcarreras([]);
       const data = await obtenerDatos('/api/carreras');
       setcarreras(data);
     }catch (error) {
       console.error('Error al cargar carreras:', error);
+    } finally {
+        setLoading(false);
     }
   };
 
@@ -129,20 +134,31 @@ const onSubmit = async (data) => {
             </div>
           </header>
 
-          {/* TABLA REUTILIZABLE */}
-          <Table
-              data={carreras}
-              columns={[
-                { header: "Carrera", accessor: "nombre" }
-              ]}
-              renderActions={(carrera) => (
-                  <ActionButtons
-                      onEdit={() => handleEditar(carrera)}
-                      showDelete={false}
-                      showBlock={false}
+            <div className="tabla-wrapper">
+                {loading ? (
+                    <div className="loading-container">
+                        <p>Cargando datos...</p>
+                    </div>
+                ) : carreras.length > 0 ? (
+                  <Table
+                      data={carreras}
+                      columns={[
+                        { header: "Carrera", accessor: "nombre" }
+                      ]}
+                      renderActions={(carrera) => (
+                          <ActionButtons
+                              onEdit={() => handleEditar(carrera)}
+                              showDelete={false}
+                              showBlock={false}
+                          />
+                      )}
                   />
-              )}
-          />
+                ) : (
+                    <div className="no-data-container">
+                        <p>No existen registros de carreras.</p>
+                    </div>
+                )}
+            </div>
 
         </div>
 

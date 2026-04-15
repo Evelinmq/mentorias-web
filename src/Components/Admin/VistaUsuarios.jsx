@@ -36,9 +36,13 @@ const VistaUsuarios = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [usuarios, setUsuarios] = useState([]);
     const [carrerasList, setCarrerasList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const cargarUsuarios = async (estado = 'Activo') => {
         try {
+            setLoading(true);
+            setUsuarios([]);
+
             const data = await obtenerDatos(`/api/usuarios/estado/${estado}`);
             console.log("Datos recibidos del server:", data);
             setUsuarios(
@@ -57,6 +61,8 @@ const VistaUsuarios = () => {
             );
         } catch (error) {
             console.error("Error cargando:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -266,27 +272,40 @@ const VistaUsuarios = () => {
                     </div>
                 </header>
 
-                <Table
-                    columns={columnas}
-                    data={usuarios}
-                    renderActions={(user) =>
-                        verPendientes
-                            ? (
-                                <PendingActions
-                                    user={user}
-                                    onAccept={(user) => handleEstado(user.id, 1)}
-                                    onReject={(user) => handleRechazar(user.id)}
-                                />
-                            )
-                            : (
-                                <ActionButtons
-                                    onEdit={() => handleEditar(user)}
-                                    onDelete={() => handleEliminar(user.id)}
-                                    onBlock={() => handleEstado(user.id, 2)}
-                                />
-                            )
-                    }
-                />
+                <div className="tabla-wrapper">
+                    {loading ? (
+                        <div className="loading-container">
+                            <p>Cargando datos...</p>
+                        </div>
+                    ) : usuarios.length > 0 ? (
+
+                        <Table
+                            columns={columnas}
+                            data={usuarios}
+                            renderActions={(user) =>
+                                verPendientes
+                                    ? (
+                                        <PendingActions
+                                            user={user}
+                                            onAccept={(user) => handleEstado(user.id, 1)}
+                                            onReject={(user) => handleRechazar(user.id)}
+                                        />
+                                    )
+                                    : (
+                                        <ActionButtons
+                                            onEdit={() => handleEditar(user)}
+                                            onDelete={() => handleEliminar(user.id)}
+                                            onBlock={() => handleEstado(user.id, 2)}
+                                        />
+                                    )
+                            }
+                        />
+                    ) : (
+                        <div className="no-data-container">
+                            <p>No existen registros de usuarios {verPendientes ? 'pendientes' : 'activos'}.</p>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {showModal && (
@@ -334,7 +353,7 @@ const VistaUsuarios = () => {
                                         options={[
                                             { value: "1", label: "Administrador"},
                                             { value: "2", label: "Mentor"},
-                                            { value: "3", label: "Alumno"}
+                                            { value: "3", label: "Aprendiz"}
                                         ]}
                                     />
                                 </div>

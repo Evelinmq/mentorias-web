@@ -25,6 +25,7 @@ const VistaMaterias = () => {
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [materiaSeleccionada, setMateriaSeleccionada] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const {
         register,
@@ -36,10 +37,14 @@ const VistaMaterias = () => {
     // --- CARGA DE DATOS ---
     const cargarMaterias = async () => {
         try {
+            setLoading(true);
+            setMaterias([]);
             const data = await obtenerDatos('/api/materias');
             setMaterias(data);
         } catch (error) {
             console.error('Error al cargar materias:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -135,21 +140,33 @@ const VistaMaterias = () => {
                     </div>
                 </header>
 
-                <Table
-                    data={materias}
-                    columns={[
-                        { header: "Materia", accessor: "nombre" },
-                        { header: "Carrera", accessor: "nombreCarrera" }, // Mostrar nombre del DTO
-                        { header: "Cuatrimestre", accessor: "cuatrimestre" }
-                    ]}
-                    renderActions={(materia) => (
-                        <ActionButtons
-                            onEdit={() => handleEditar(materia)}
-                            onDelete={() => eliminarMateria(materia.id)}
-                            showBlock={false}
+                <div className="tabla-wrapper">
+                    {loading ? (
+                        <div className="loading-container">
+                            <p>Cargando datos...</p>
+                        </div>
+                    ) : materias.length > 0 ? (
+                        <Table
+                            data={materias}
+                            columns={[
+                                { header: "Materia", accessor: "nombre" },
+                                { header: "Carrera", accessor: "nombreCarrera" },
+                                { header: "Cuatrimestre", accessor: "cuatrimestre" }
+                            ]}
+                            renderActions={(materia) => (
+                                <ActionButtons
+                                    onEdit={() => handleEditar(materia)}
+                                    onDelete={() => eliminarMateria(materia.id)}
+                                    showBlock={false}
+                                />
+                            )}
                         />
+                    ) :(
+                        <div className="no-data-container">
+                            <p>No existen registros de materias.</p>
+                        </div>
                     )}
-                />
+                </div>
             </div>
 
             {showModal && (
